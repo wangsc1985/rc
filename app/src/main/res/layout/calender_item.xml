@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendarItemContainer"
+    android:layout_width="45dp"
+    android:layout_height="45dp"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <View android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:background="@drawable/is_today_45"
+        android:id="@+id/calendarItem_cvIsToday"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"></View>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/calenderItem_tv_YangLiDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="27"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ff706d72"
+            android:textSize="20dp"
+            android:typeface="monospace"
+            android:textStyle="bold"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:id="@+id/calendarItem_tv_NongLiDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:text="十六"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="10dp"
+            android:layout_marginTop="-2dp" />
+    </LinearLayout>
+
+    <View android:layout_height="45dp"
+        android:layout_width="45dp"
+        android:background="@drawable/un_religious_day_160"
+        android:id="@+id/calendarItem_cvIsUnReligious"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"></View>
+
+    <View android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@drawable/selected_day_45"
+        android:id="@+id/calendarItem_cvIsSelected"
+        android:visibility="invisible"></View>
+
+</RelativeLayout>

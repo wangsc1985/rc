@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textView_relation"
+        android:gravity="left"
+        android:textColor="#000000"
+        android:textSize="14dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="2dp"
+        android:layout_gravity="center_vertical" />
+    <TextView
+        android:id="@+id/textView_type"
+        android:gravity="left"
+        android:textColor="#000000"
+        android:textSize="14dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical" />
+    <TextView
+        android:id="@+id/textView_lunarDate"
+        android:gravity="left"
+        android:textColor="#000000"
+        android:textSize="14dp"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="50dp"
+        android:layout_height="25dp"
+        android:id="@+id/linear_delete"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_height="15dp"
+            android:layout_width="15dp"
+            android:id="@+id/imageView_Del"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_delete" />
+    </LinearLayout>
+
+</LinearLayout>

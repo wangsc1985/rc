@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <!--android:background="@drawable/side_nav_bar"-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/accent_material_light"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="170dp"
+                android:layout_height="390dp"
+                android:src="@drawable/amtf"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:id="@+id/textView_Version"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QQ/微信：645708679"
+                android:textColor="#ffffff"
+                android:layout_gravity="center_horizontal"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right">
+
+            <FrameLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_gravity="bottom|right">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/layout_setting">
+
+                    <TextView
+                        android:layout_width="40dp"
+                        android:layout_height="25dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="设置"
+                        android:id="@+id/textView_setting"
+                        android:textColor="#b90404"
+                        android:textSize="13dp"
+                        android:padding="4dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/btn_round" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton_setting"
+                    android:src="@android:drawable/ic_menu_manage"
+                    android:background="@drawable/btn_round"
+                    android:padding="4dp"
+                    android:visibility="invisible"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView2"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/textView_Content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="●天忌 切宜禁戒\n\n酷暑严寒。	\n犯之得重疾不救。\n\n烈风雷雨。天地晦冥。日月薄蚀。虹现地动。	\n犯之产怪物身死。\n\n白昼。星月之下。灯火之前。\n犯之皆减寿。\n\n●地忌 切宜禁戒\n\n庙宇寺观堂之内。\n犯之大减禄寿。\n\n井灶圊厕之侧。\n荒园冢墓尸柩之旁。\n犯之恶神降胎。并产怪物身死。\n\n●人忌 切宜禁戒\n\n郁怒	\n大怒伤肝。犯之必病。\n\n远行	\n行房百里者病。百里行房者死。\n\n醉饱	\n醉饱行房。五脏反覆。\n\n空腹	\n犯之伤元神。\n\n病后	\n犯之变证复发。\n\n胎前	\n犯之伤胎。故凡有孕后。即宜分床绝欲。一则恪遵胎训。一则无堕胎之患。及小儿胎毒胎瘁。凶险瘄痘。游风惊癎。牙疳等病。二则所生之儿。男必端严方正。女必贞静幽闲，自然不犯淫佚。\n\n产后	\n十余日内犯之妇必死。百日内犯之妇必病。\n\n天癸来时	\n犯之成血麻证。男女俱病。\n\n竹席	\n竹性寒凉。犯之易感寒气。\n\n薄衾	\n犯之寒气入骨。\n\n窗隙有风宜避。夜深就枕宜戒。\n交合才毕。婴儿在旁啼哭。勿即与乳。\n交罢勿即挥扇。及饮冷茶水。以若过受凉。或至即死。\n一夕勿两度。\n勿服春方邪药。\n勿蓄缩不泄。\n\n生病。生疮。出痘。\n非十分复原。万不可犯，犯则多半必死。\n\n目疾	\n未愈或始愈，犯之必瞎。\n\n虚劳证	\n虽养好强健。犹须断欲一年。若以为复原而犯，多半必死。\n\n伤损筋骨	\n好后犹须戒百七八十日。若未过百日。犯之必死。纵过亦必致残废。\n\n过辛苦。过操心。过热。过惊恐。过忧愁。\n皆不可犯。犯之轻则痼疾。重则即死亡。\n　　"
+            android:textColor="#000000"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/textView10"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="训饬士子戒淫文\n  　　文帝曰。天道祸淫。其报甚速。人之不畏。梦梦无知。苟行检之不修。即灾殃之立至。嗟尔有众。听予训言。惟惠迪吉。自古云然。不善降殃。昔人明戒。春秋之淫乱。皆败国而亡家。风雅之刺讥。尽鹑奔而鹊逐。故逆理乃自戕其性。而贪淫即自夺其名。人事一乖。天心尽怒。桂香上苑。非洁己者难邀。杏宴天恩。岂污名者可得。予莅文衡。尝垂教示。奈士子止贪半晌之欢。罔惜终身之计。淫人人淫。交手为市。业报惨酷。洗心者谁。吾于二八试闱。每多临时去取。一笔勾削。只缘窥彼邻妻。数字增加。端为拒兹室女。欲闻平地之雷。莫起寸心之火。终年潦倒。岂负学苦文高。一世迍邅。悉是瑜闲败节。士人不察于所由。反或怨天而恨地。植来黄甲。只在心田。衣尔紫袍。总由阴骘。棘闱满地皆神。文院三场有鬼。惜哉字字珠玑。忽遇灯煤落卷。怅矣篇篇锦绣。无端墨迹污文。此时予实主持。孰谓苍天无眼。榜发三元。为有惊神之德。莲开并蒂。旋闻坠蕊之凶。倘能持正而不邪。自尔名归而禄得。特颁新谕。咸使闻知。  　　\n\n戒淫圣训\n  　　文帝垂训曰。吾奉金阙至尊之命。于每月寅卯日。按行酆都地狱。考定天下有罪人民事实。见夫黑籍如山。皆是世人一生孽案。其间作恶多端。惟淫恶之报。天律最严。人奸妻女。玷人闺门。在地狱中。受苦五百劫。方得脱生。为骡为马。又五百劫。乃复人身。为娼为优。设谋造计。奸宿寡妇尼僧。败人操履。在地狱中。受苦八百劫。方得脱生。为羊为豕。供人宰杀。又八百劫。乃复人身。为瞽为哑。以卑乱尊。以长乱幼。败坏纲常。在地狱中。受苦一千五百劫。方得脱生。为蛇为鼠。又一千五百劫。方得人身。或在母胎中死。或在孩抱中亡。毕竟不享天年。更有造作淫书。坏人心术。死入无闲地狱。直至其书灭尽。因其书而作恶者。罪报皆空。方得脱生。淫书之为害。不可胜数。常有名闺淑媛。识字知文。或绿总昼静。或青灯夜阑。展卷视之。魂摇魄荡。不禁欲火之焚。遽成奔窃之行。致节妇失节。贞女丧贞。更有聪明子弟。秀而有文。一见此书。遂起欲想。或手婬而不制。成目挑而苟从。小则欧丧元阳。少年夭折。大则渎乱沦纪。不齿士林。若夫巧作传奇。当场演出。教习狎童备示淫态。乱人清操。不可胜数。职其根由。皆淫书所致。奈何士子以夙世之慧根。握七寸之斑管。不思有功于世。积福于身。徒造无穷之孽。干上帝之怒。自蹈于冰渊火坑而不恤。深可悲也。"-->
+            <!--android:textColor="#000000"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_marginRight="10dp" />-->
+    </ScrollView>
+
+
+
+</LinearLayout>

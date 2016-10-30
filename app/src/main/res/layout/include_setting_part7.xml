@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_guide"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:orientation="horizontal">
+
+    <!--<TextView-->
+    <!--android:text="寿康宝鉴日历每次最新版本将第一时间发布在“360手机助手”和腾讯“应用宝”两个应用市场。其他应用市场都是由上面两个应用市场间接更新获取，更新时间不及时。如果想获取"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/textView11"-->
+    <!--android:layout_weight="1" />-->
+
+    <TextView
+        android:id="@+id/textView_guide"
+        android:layout_width="100dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_round"
+        android:gravity="center"
+        android:text="软件使用帮助"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#b90404"
+        android:textSize="13dp" />
+
+    <TextView
+        android:id="@+id/textView_update"
+        android:layout_width="150dp"
+        android:layout_height="25dp"
+        android:layout_gravity="center"
+        android:background="@drawable/btn_round"
+        android:gravity="center"
+        android:text="有新版本，点击升级"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#b90404"
+        android:textSize="13dp"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone" />
+</LinearLayout>

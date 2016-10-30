@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#bd1919"
+    android:orientation="vertical"
+    android:id="@+id/layout_banner">
+
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription=""
+        android:src="@drawable/banner006"
+        android:id="@+id/imageView_banner"
+        android:background="#2633a1" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentLeft="true"
+        android:padding="10dp"
+        android:layout_gravity="bottom|right"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="菜单"
+            android:id="@+id/textView_leftMenu1"
+            android:textColor="#ffffff"
+            android:textSize="13dp"
+            android:background="@drawable/btn_round"
+            android:padding="4dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton_leftMenu1"
+            android:padding="4dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_menu_agenda"
+            android:background="@drawable/btn_round" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="10dp"
+        android:layout_gravity="bottom|right"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="设置"
+            android:id="@+id/textView_set"
+            android:textColor="#ffffff"
+            android:textSize="13dp"
+            android:background="@drawable/btn_round"
+            android:padding="4dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton_set"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:background="@drawable/btn_round"
+            android:padding="4dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</FrameLayout>

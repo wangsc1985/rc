@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activity.SettingActivity"
+    tools:showIn="@layout/activity_setting"
+    android:id="@+id/layout_setting_root">
+
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="20dp">
+
+            <include layout="@layout/include_setting_part1" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part2" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part3" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part4" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part5" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part6" />
+
+            <!-- 分割线 -->
+            <include layout="@layout/include_separation0"/>
+            <include layout="@layout/include_setting_part7"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+</RelativeLayout>

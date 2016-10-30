@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="navigation_drawer_open">打开导航菜单</string>
+    <string name="navigation_drawer_close">关闭导航菜单</string>
+    <string name="app_name">寿康宝鉴日历</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_welcome">欢迎界面</string>
+    <string name="title_activity_setting">设置</string>
+
+    <string name="title_activity_guide">引导界面</string>
+</resources>
