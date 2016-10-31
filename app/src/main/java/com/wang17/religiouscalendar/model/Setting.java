@@ -1,10 +1,5 @@
 package com.wang17.religiouscalendar.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 /**
  * Created by 阿弥陀佛 on 2015/6/30.
  */
@@ -31,7 +26,7 @@ public class Setting {
         this.value = value;
     }
 
-    public enum BuddhaSelection{
-        guanyin001
+    public enum KEYS{
+        banner,bannerPositoin,welcome,welcome_duration,zodiac1,zodiac2,szr,latestVersionCode
     }
 }

@@ -26,11 +26,11 @@ public class WelcomeActivity extends ActionBarActivity {
             DataContext context = new DataContext(WelcomeActivity.this);
             int softVersion = 13;
             int currentVersionCode = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
-            int latestVersionCode = Integer.parseInt(context.getSetting(SettingKey.latestVersionCode.toString(),0).getValue());
+            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode.toString(),0).getValue());
             if(softVersion>latestVersionCode){
                 GuideActivity.btnText="立即体验";
                 startActivity(new Intent(WelcomeActivity.this,GuideActivity.class));
-                context.editSetting(SettingKey.latestVersionCode.toString(),softVersion);
+                context.editSetting(Setting.KEYS.latestVersionCode.toString(),softVersion);
             }
 
             ImageView welcomeImg = (ImageView) this.findViewById(R.id.imageBuddha);
@@ -39,11 +39,11 @@ public class WelcomeActivity extends ActionBarActivity {
             if (setting != null) {
                 itemPosition = Integer.parseInt(setting.getValue());
             } else {
-                context.addSetting(SettingKey.welcome.toString(), itemPosition + "");
+                context.addSetting(Setting.KEYS.welcome.toString(), itemPosition + "");
             }
             if (itemPosition >= _Session.welcomes.size()) {
                 itemPosition = 0;
-                context.editSetting(SettingKey.welcome.toString(), itemPosition + "");
+                context.editSetting(Setting.KEYS.welcome.toString(), itemPosition + "");
             }
             welcomeImg.setImageResource(_Session.welcomes.get(itemPosition).getResId());
 

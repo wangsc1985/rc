@@ -26,7 +26,6 @@ import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.MDrelation;
 import com.wang17.religiouscalendar.emnu.MDtype;
 import com.wang17.religiouscalendar.emnu.Zodiac;
-import com.wang17.religiouscalendar.helper.SettingKey;
 import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.helper._String;
@@ -42,8 +41,8 @@ import java.util.UUID;
 
 public class SettingActivity extends AppCompatActivity {
 
-    private Spinner spinnerZodiac1, spinnerZodiac2, spinnerMDtype, spinnerMDrelation, spinnerMonth, spinnerDay, spinnerWelcome, spinnerBanner, spinnerBannerPosition;
-    private Button btnAddMD;
+    private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration, spinner_banner, spinner_bannerPosition;
+    private Button btn_addMD;
     private CheckBox checkBox_szr;
     private TextView textView_guide, textView_update;
 
@@ -62,17 +61,18 @@ public class SettingActivity extends AppCompatActivity {
 
 
         try {
-            spinnerZodiac1 = (Spinner) findViewById(R.id.spinner_zodiac1);
-            spinnerZodiac2 = (Spinner) findViewById(R.id.spinner_zodiac2);
-            spinnerMDtype = (Spinner) findViewById(R.id.spinner_mdtype);
-            spinnerMDrelation = (Spinner) findViewById(R.id.spinner_mdrelation);
-            spinnerMonth = (Spinner) findViewById(R.id.spinner_month);
-            spinnerDay = (Spinner) findViewById(R.id.spinner_day);
-            spinnerWelcome = (Spinner) findViewById(R.id.spinner_buddha);
-            spinnerBanner = (Spinner) findViewById(R.id.spinner_banner);
-            spinnerBannerPosition = (Spinner) findViewById(R.id.spinner_bannerPositio);
+            spinner_zodiac1 = (Spinner) findViewById(R.id.spinner_zodiac1);
+            spinner_zodiac2 = (Spinner) findViewById(R.id.spinner_zodiac2);
+            spinner_mdtype = (Spinner) findViewById(R.id.spinner_mdtype);
+            spinner_mdrelation = (Spinner) findViewById(R.id.spinner_mdrelation);
+            spinner_month = (Spinner) findViewById(R.id.spinner_month);
+            spinner_day = (Spinner) findViewById(R.id.spinner_day);
+            spinner_welcome = (Spinner) findViewById(R.id.spinner_welcome);
+            spinner_duration = (Spinner) findViewById(R.id.spinner_duration);
+            spinner_banner = (Spinner) findViewById(R.id.spinner_banner);
+            spinner_bannerPosition = (Spinner) findViewById(R.id.spinner_bannerPositio);
 
-            btnAddMD = (Button) findViewById(R.id.button_AddMD);
+            btn_addMD = (Button) findViewById(R.id.button_addMD);
             textView_guide = (TextView) findViewById(R.id.textView_guide);
             textView_update = (TextView) findViewById(R.id.textView_update);
 
@@ -95,56 +95,50 @@ public class SettingActivity extends AppCompatActivity {
 //        if (UpdateManager.isUpdate())
 //            textView_update.setVisibility(View.VISIBLE);
 
-        Setting szr = dataContext.getSetting(SettingKey.szr.toString());
+        Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString());
         if (szr == null) {
-            dataContext.addSetting(SettingKey.szr.toString(), false + "");
+            dataContext.addSetting(Setting.KEYS.szr.toString(), false + "");
             checkBox_szr.setChecked(false);
         } else {
             checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
         }
 
-        this.initializeZodiac(spinnerZodiac1);
-        this.initializeZodiac(spinnerZodiac2);
-        Setting zodiac1 = dataContext.getSetting(SettingKey.zodiac1.toString());
-        Setting zodiac2 = dataContext.getSetting(SettingKey.zodiac2.toString());
+        this.initializeZodiac(spinner_zodiac1);
+        this.initializeZodiac(spinner_zodiac2);
+        Setting zodiac1 = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
+        Setting zodiac2 = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
         if (zodiac1 != null) {
-            spinnerZodiac1.setSelection(Zodiac.fromString(zodiac1.getValue()).toInt());
+            spinner_zodiac1.setSelection(Zodiac.fromString(zodiac1.getValue()).toInt());
         }
         if (zodiac2 != null) {
-            spinnerZodiac2.setSelection(Zodiac.fromString(zodiac2.getValue()).toInt());
+            spinner_zodiac2.setSelection(Zodiac.fromString(zodiac2.getValue()).toInt());
         }
 
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < MDtype.count(); i++) {
             list.add(MDtype.fromInt(i).toString());
         }
-        this.fillSpinner(spinnerMDtype, list);
+        this.fillSpinner(spinner_mdtype, list);
         List<String> list2 = new ArrayList<String>();
         for (int i = 0; i < MDrelation.count(); i++) {
             list2.add(MDrelation.fromInt(i).toString());
         }
-        this.fillSpinner(spinnerMDrelation, list2);
+        this.fillSpinner(spinner_mdrelation, list2);
 
-        this.initializeLunarMonth(spinnerMonth);
-        this.initializeLunarDay(spinnerDay);
+        this.initializeLunarMonth(spinner_month);
+        this.initializeLunarDay(spinner_day);
 
-        this.initializeBuddha(spinnerWelcome);
-        Setting welcome = dataContext.getSetting(SettingKey.welcome.toString());
-        if (welcome != null) {
-            spinnerWelcome.setSelection(Integer.parseInt(welcome.getValue()));
-        }
+        this.initializeWelcome();
+        spinner_welcome.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome.toString(), 0).getValue()));
 
-        this.initializeBanner(spinnerBanner);
-        Setting banner = dataContext.getSetting(SettingKey.banner.toString());
-        if (banner != null) {
-            spinnerBanner.setSelection(Integer.parseInt(banner.getValue()));
-        }
+        this.initializeDuration();
+        spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 3).getValue()));
 
-        this.initializeBannerPosition(spinnerBannerPosition);
-        Setting bannerPostion = dataContext.getSetting(SettingKey.bannerPositoin.toString());
-        if (bannerPostion != null) {
-            spinnerBannerPosition.setSelection(Integer.parseInt(bannerPostion.getValue()));
-        }
+        this.initializeBanner();
+        spinner_banner.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), 0).getValue()));
+
+        this.initializeBannerPosition();
+        spinner_bannerPosition.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString(), 0).getValue()));
 
         List<MemorialDay> memorialDays = dataContext.getMemorialDays();
 
@@ -235,15 +229,15 @@ public class SettingActivity extends AppCompatActivity {
                 calenderChanged = true;
             }
         });
-        btnAddMD.setOnClickListener(new View.OnClickListener() {
+        btn_addMD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     MemorialDay md = new MemorialDay();
-                    String relation = spinnerMDrelation.getSelectedItem().toString();
-                    String type = spinnerMDtype.getSelectedItem().toString();
-                    String month = spinnerMonth.getSelectedItem().toString();
-                    String day = spinnerDay.getSelectedItem().toString();
+                    String relation = spinner_mdrelation.getSelectedItem().toString();
+                    String type = spinner_mdtype.getSelectedItem().toString();
+                    String month = spinner_month.getSelectedItem().toString();
+                    String day = spinner_day.getSelectedItem().toString();
                     md.setRelation(MDrelation.fromString(relation));
                     md.setType(MDtype.fromString(type));
                     md.setLunarDate(new LunarDate(month, day));
@@ -259,12 +253,12 @@ public class SettingActivity extends AppCompatActivity {
                 }
             }
         });
-        spinnerZodiac1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_zodiac1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(SettingKey.zodiac1.toString());
-                String zodiac = spinnerZodiac1.getItemAtPosition(position).toString();
-                dataContext.editSetting(SettingKey.zodiac1.toString(), zodiac);
+                Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
+                String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
+                dataContext.editSetting(Setting.KEYS.zodiac1.toString(), zodiac);
                 if (setting != null && !setting.getValue().equals(zodiac)) {
                     calenderChanged = true;
                     snackbarSaved();
@@ -276,12 +270,12 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        spinnerZodiac2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_zodiac2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(SettingKey.zodiac2.toString());
-                String zodiac = spinnerZodiac2.getItemAtPosition(position).toString();
-                dataContext.editSetting(SettingKey.zodiac2.toString(), zodiac);
+                Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
+                String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
+                dataContext.editSetting(Setting.KEYS.zodiac2.toString(), zodiac);
                 if (setting != null && !setting.getValue().equals(zodiac)) {
                     calenderChanged = true;
                     snackbarSaved();
@@ -293,18 +287,56 @@ public class SettingActivity extends AppCompatActivity {
 
             }
         });
-        spinnerWelcome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_welcome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                      @Override
+                                                      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                          Setting setting = dataContext.getSetting(Setting.KEYS.welcome.toString(), 0);
+                                                          if (!setting.getValue().equals(spinner_welcome.getSelectedItemPosition() + "")) {
+                                                              dataContext.editSetting(Setting.KEYS.welcome.toString(), spinner_welcome.getSelectedItemPosition() + "");
+                                                              snackbarSaved();
+                                                          }
+                                                      }
+
+                                                      @Override
+                                                      public void onNothingSelected(AdapterView<?> parent) {
+
+                                                      }
+                                                  }
+
+        );
+        spinner_duration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 3);
+                if (!setting.getValue().equals(spinner_duration.getSelectedItemPosition() + "")) {
+                    dataContext.editSetting(Setting.KEYS.welcome_duration.toString(),(spinner_duration.getSelectedItemPosition()) + "");
+                    snackbarSaved();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner_banner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                                      @Override
-                                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                         Setting setting = dataContext.getSetting(SettingKey.welcome.toString());
+                                                     public void onItemSelected(AdapterView<?> parent, View view, int position,
+                                                                                long id) {
+
+                                                         Setting setting = dataContext.getSetting(Setting.KEYS.banner.toString());
                                                          if (setting != null) {
-                                                             if (!setting.getValue().equals(spinnerWelcome.getSelectedItemPosition() + "")) {
-                                                                 dataContext.editSetting(SettingKey.welcome.toString(), spinnerWelcome.getSelectedItemPosition() + "");
+                                                             if (!setting.getValue().equals(spinner_banner.getSelectedItemPosition() + "")) {
+                                                                 bannerChanged = true;
+                                                                 dataContext.editSetting(Setting.KEYS.banner.toString(), spinner_banner.getSelectedItemPosition() + "");
                                                                  snackbarSaved();
                                                              }
                                                          } else {
-                                                             dataContext.addSetting(SettingKey.welcome.toString(), spinnerWelcome.getSelectedItemPosition() + "");
-                                                             snackbarSaved();
+                                                             if (spinner_banner.getSelectedItemPosition() != 0) {
+                                                                 bannerChanged = true;
+                                                                 dataContext.addSetting(Setting.KEYS.banner.toString(), spinner_banner.getSelectedItemPosition() + "");
+                                                                 snackbarSaved();
+                                                             }
                                                          }
                                                      }
 
@@ -315,48 +347,20 @@ public class SettingActivity extends AppCompatActivity {
                                                  }
 
         );
-        spinnerBanner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                    @Override
-                                                    public void onItemSelected(AdapterView<?> parent, View view, int position,
-                                                                               long id) {
-
-                                                        Setting setting = dataContext.getSetting(SettingKey.banner.toString());
-                                                        if (setting != null) {
-                                                            if (!setting.getValue().equals(spinnerBanner.getSelectedItemPosition() + "")) {
-                                                                bannerChanged = true;
-                                                                dataContext.editSetting(SettingKey.banner.toString(), spinnerBanner.getSelectedItemPosition() + "");
-                                                                snackbarSaved();
-                                                            }
-                                                        } else {
-                                                            if (spinnerBanner.getSelectedItemPosition() != 0) {
-                                                                bannerChanged = true;
-                                                                dataContext.addSetting(SettingKey.banner.toString(), spinnerBanner.getSelectedItemPosition() + "");
-                                                                snackbarSaved();
-                                                            }
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                                    }
-                                                }
-
-        );
-        spinnerBannerPosition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_bannerPosition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(SettingKey.bannerPositoin.toString());
+                Setting setting = dataContext.getSetting(Setting.KEYS.bannerPositoin.toString());
                 if (setting != null) {
-                    if (!setting.getValue().equals(spinnerBannerPosition.getSelectedItemPosition() + "")) {
+                    if (!setting.getValue().equals(spinner_bannerPosition.getSelectedItemPosition() + "")) {
                         bannerPositionChanged = true;
-                        dataContext.editSetting(SettingKey.bannerPositoin.toString(), spinnerBannerPosition.getSelectedItemPosition() + "");
+                        dataContext.editSetting(Setting.KEYS.bannerPositoin.toString(), spinner_bannerPosition.getSelectedItemPosition() + "");
                         snackbarSaved();
                     }
                 } else {
-                    if (spinnerBannerPosition.getSelectedItemPosition() != 0) {
+                    if (spinner_bannerPosition.getSelectedItemPosition() != 0) {
                         bannerPositionChanged = true;
-                        dataContext.addSetting(SettingKey.bannerPositoin.toString(), spinnerBannerPosition.getSelectedItemPosition() + "");
+                        dataContext.addSetting(Setting.KEYS.bannerPositoin.toString(), spinner_bannerPosition.getSelectedItemPosition() + "");
                         snackbarSaved();
                     }
                 }
@@ -369,28 +373,39 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeBannerPosition(Spinner spinner) {
+    private void initializeDuration() {
+        List<String> list = new ArrayList<String>();
+        list.add("2秒");
+        list.add("3秒");
+        list.add("4秒");
+        list.add("5秒");
+        list.add("6秒");
+        list.add("7秒");
+        this.fillSpinner(spinner_duration, list);
+    }
+
+    private void initializeBannerPosition() {
         List<String> list = new ArrayList<String>();
         list.add("顶部显示");
         list.add("下部显示");
         list.add("不显示");
-        this.fillSpinner(spinner, list);
+        this.fillSpinner(spinner_bannerPosition, list);
     }
 
-    private void initializeBanner(Spinner spinner) {
+    private void initializeBanner() {
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < _Session.banners.size(); i++) {
             list.add(_Session.banners.get(i).getListItemString());
         }
-        this.fillSpinner(spinner, list);
+        this.fillSpinner(spinner_banner, list);
     }
 
-    private void initializeBuddha(Spinner spinner) {
+    private void initializeWelcome() {
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < _Session.welcomes.size(); i++) {
             list.add(_Session.welcomes.get(i).getListItemString());
         }
-        this.fillSpinner(spinner, list);
+        this.fillSpinner(spinner_welcome, list);
     }
 
     private void initializeZodiac(Spinner spinner) {

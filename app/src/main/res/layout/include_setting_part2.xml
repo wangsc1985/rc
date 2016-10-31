@@ -128,7 +128,7 @@
                             android:textSize="14dp" />
 
                         <Button
-                            android:id="@+id/button_AddMD"
+                            android:id="@+id/button_addMD"
                             android:layout_width="50dp"
                             android:layout_height="38dp"
                             android:background="@drawable/button_bg"

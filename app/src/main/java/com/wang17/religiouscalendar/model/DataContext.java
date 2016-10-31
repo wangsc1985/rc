@@ -118,10 +118,7 @@ public class DataContext {
         return null;
     }
 
-    public Setting getSetting(String key, Object defaultValue) throws Exception{
-        if(defaultValue==null){
-            throw new Exception("defaultValue不能为空！");
-        }
+    public Setting getSetting(String key, Object defaultValue){
         Setting setting = getSetting(key);
         if (setting == null) {
             this.addSetting(key, defaultValue);
