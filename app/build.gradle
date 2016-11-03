@@ -22,14 +22,14 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
-    compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
     compile files('libs/Baidu-OAuth-SDK-Android-G-2.0.0.jar')
     compile files('libs/Baidu-PCS-SDK-Android-L2-2.1.0.jar')
     compile files('libs/httpmime-4.2.jar')
+    compile 'com.google.android.gms:play-services-appindexing:9.6.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okio:okio:1.10.0'
+    testCompile 'junit:junit:4.12'
 }

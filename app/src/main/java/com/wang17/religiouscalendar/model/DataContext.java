@@ -23,6 +23,7 @@ public class DataContext {
         dbHelper = new DatabaseHelper(context);
     }
 
+    //region MemorialDay
     public void addMemorialDay(MemorialDay memorialDay) {
         //获取数据库对象
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -103,7 +104,111 @@ public class DataContext {
         //关闭SQLiteDatabase对象
         db.close();
     }
+    //endregion
 
+    //region SexualDay
+
+    /**
+     * 增加一条SexualDay
+     *
+     * @param sexualDay 记录对象
+     */
+    public void addSexualDay(SexualDay sexualDay) {
+        //获取数据库对象
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        //使用insert方法向表中插入数据
+        ContentValues values = new ContentValues();
+        values.put("id", sexualDay.getId().toString());
+        values.put("dateTime", sexualDay.getDateTime().getTimeInMillis());
+        values.put("item", sexualDay.getItem());
+        values.put("summary", sexualDay.getSummary());
+
+        //调用方法插入数据
+        db.insert("sexualDay", "id", values);
+        //关闭SQLiteDatabase对象
+        db.close();
+    }
+
+    /**
+     * 得到所有SexualDay
+     *
+     * @return
+     */
+    public SexualDay getLastSexualDay() {
+        //获取数据库对象
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //查询获得游标
+        Cursor cursor = db.query("sexualDay", null, null, null, null, null, "DateTime  DESC");
+        //判断游标是否为空
+
+        if (cursor.moveToNext()) {
+            SexualDay model = new SexualDay(UUID.fromString(cursor.getString(0)));
+            model.setDateTime(new DateTime(cursor.getLong(1)));
+            model.setItem(cursor.getString(2));
+            model.setSummary(cursor.getString(3));
+            return model;
+        }
+        return null;
+    }
+
+    /**
+     * 得到所有SexualDay
+     *
+     * @return
+     */
+    public List<SexualDay> getSexualDays() {
+
+        List<SexualDay> result = new ArrayList<SexualDay>();
+        //获取数据库对象
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        //查询获得游标
+        Cursor cursor = db.query("sexualDay", null, null, null, null, null, null);
+        //判断游标是否为空
+        while (cursor.moveToNext()) {
+            SexualDay model = new SexualDay(UUID.fromString(cursor.getString(0)));
+            model.setDateTime(new DateTime(cursor.getLong(1)));
+            model.setItem(cursor.getString(2));
+            model.setSummary(cursor.getString(3));
+            result.add(model);
+        }
+        return result;
+    }
+
+    /**
+     * 得到所有SexualDay
+     *
+     * @return
+     */
+    public void updateSexualDay(SexualDay sexualDay) {
+
+        //获取数据库对象
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        //使用update方法更新表中的数据
+        ContentValues values = new ContentValues();
+        values.put("dateTime", sexualDay.getDateTime().getTimeInMillis());
+        values.put("item", sexualDay.getItem());
+        values.put("summary", sexualDay.getSummary());
+
+        db.update("sexualDay", values, "id=?", new String[]{sexualDay.getId().toString()});
+        db.close();
+    }
+
+    /**
+     * 删除指定的record
+     *
+     * @param id
+     */
+    public void deleteSexualDay(UUID id) {
+        //获取数据库对象
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete("sexualDay", "id=?", new String[]{id.toString()});
+        //关闭SQLiteDatabase对象
+        db.close();
+    }
+    //endregion
+
+    //region Setting
     public Setting getSetting(String key) {
 
         //获取数据库对象
@@ -168,6 +273,7 @@ public class DataContext {
         //关闭SQLiteDatabase对象
         db.close();
     }
+    //endregion
 
 
 }

@@ -13,6 +13,10 @@ public class DateTime extends GregorianCalendar {
     public DateTime() {
     }
 
+    public DateTime(long timeInMillis){
+        this.setTimeInMillis(timeInMillis);
+    }
+
     public DateTime(int year, int month, int day) {
         this.set(year, month, day, 0, 0, 0);
         this.set(Calendar.MILLISECOND, 0);
@@ -67,7 +71,11 @@ public class DateTime extends GregorianCalendar {
         return this.get(DAY_OF_MONTH);
     }
 
+    public int getHour() {
+        return this.get(HOUR_OF_DAY);
+    }
+
     public String toShortDateString() {
-        return _String.concat(this.getYear() , "年", this.getMonth() + 1, "月", this.getDay() ,"日");
+        return _String.concat(this.getYear(), "年", this.getMonth() + 1, "月", this.getDay(), "日");
     }
 }
