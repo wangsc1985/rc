@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
-    private Typeface fontHWZS;
+    private Typeface fontHWZS,fontGF;
     private DateTime selectedDate;
     // 值变量
     private int calendarItemCount, preSelectedPosition, todayPosition, currentYear, currentMonth;
@@ -199,8 +199,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initializeComponent() {
         try {
             //
-            nianfo();
-            //
             int itemPosition = 0;
             itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), itemPosition).getValue());
             if (itemPosition >= _Session.banners.size()) {
@@ -251,6 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             AssetManager mgr = getAssets();//得到AssetManager
             fontHWZS = Typeface.createFromAsset(mgr, "fonts/STZHONGS.TTF");
+            fontGF = Typeface.createFromAsset(mgr, "fonts/GONGFANG.ttf");
 
             TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
             textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
@@ -262,8 +261,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             textView_fo = (TextView) findViewById(R.id.tvfo);
 //            textView_fo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 //            ((TextView)findViewById(R.id.textView_banner_text)).setTypeface(fontHWZS);
-//            textView_fo.setTypeface(fontHWZS);
+            textView_fo.setTypeface(fontGF);
 //            textView_fo.getPaint().setFakeBoldText(true);
+            //
+            nianfo();
 
             // selectedDate
             selectedDate = DateTime.getToday();
