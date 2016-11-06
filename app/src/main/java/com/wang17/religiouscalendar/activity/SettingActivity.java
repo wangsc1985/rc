@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,8 @@ import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.MDrelation;
 import com.wang17.religiouscalendar.emnu.MDtype;
 import com.wang17.religiouscalendar.emnu.Zodiac;
+import com.wang17.religiouscalendar.fragment.ActionBarFragment;
+import com.wang17.religiouscalendar.fragment.ActionBarFragment.OnActionFragmentBackListener;
 import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.helper._String;
@@ -39,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements OnActionFragmentBackListener{
 
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration, spinner_banner, spinner_bannerPosition;
     private Button btn_addMD;
@@ -56,9 +57,7 @@ public class SettingActivity extends AppCompatActivity {
         Log.i("wangsc", "SettingActivity is loading ...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_action,ActionBarFragment.newInstance()).commit();
 
         try {
             spinner_zodiac1 = (Spinner) findViewById(R.id.spinner_zodiac1);
@@ -428,6 +427,11 @@ public class SettingActivity extends AppCompatActivity {
         ArrayAdapter<String> aspn = new ArrayAdapter<String>(SettingActivity.this, R.layout.inflate_spinner, values);
         aspn.setDropDownViewResource(R.layout.inflate_spinner_dropdown);
         spinner.setAdapter(aspn);
+    }
+
+    @Override
+    public void onBackListener() {
+        this.finish();
     }
 
     /**

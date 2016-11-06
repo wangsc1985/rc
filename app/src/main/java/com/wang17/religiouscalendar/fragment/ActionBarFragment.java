@@ -1,9 +1,13 @@
 package com.wang17.religiouscalendar.fragment;
 
 
+import android.animation.AnimatorInflater;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,11 +32,10 @@ public class ActionBarFragment extends Fragment {
 
     // TODO:  视图变量
     View containerView;
-    ImageView imageView_back, imageView_setting;
-    TextView textView_sexual;
+    ImageView imageView_back;
+    TextView textView_title;
     // TODO:  类变量
     private OnActionFragmentBackListener backListener;
-    private OnActionFragmentSettingListener settingListener;
     private DataContext dataContext;
     // TODO:  值变量
     public static final int TO_LIST = 0;
@@ -56,15 +59,7 @@ public class ActionBarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         containerView = inflater.inflate(R.layout.fragment_action_bar, container, false);
-        // TODO: 2016/10/19 初始化视图
-        imageView_setting = (ImageView) containerView.findViewById(R.id.imageView_setting);
-        imageView_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (settingListener != null)
-                    settingListener.onSettingListener();
-            }
-        });
+        //
         imageView_back = (ImageView) containerView.findViewById(R.id.imageView_back);
         imageView_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,22 +68,25 @@ public class ActionBarFragment extends Fragment {
                     backListener.onBackListener();
             }
         });
-
-        if(settingListener==null){
-            imageView_setting.setVisibility(View.INVISIBLE);
-        }
         if(backListener ==null){
             imageView_back.setVisibility(View.INVISIBLE);
         }
         //
-        textView_sexual = (TextView) containerView.findViewById(R.id.textView_sexual);
-        textView_sexual.setOnClickListener(new View.OnClickListener() {
+        textView_title = (TextView) containerView.findViewById(R.id.textView_title);
+        textView_title.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/GONGFANG.ttf"));
+        //
+        ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.color_animator);
+        objectAnimator.setEvaluator(new ArgbEvaluator());
+        objectAnimator.setTarget(textView_title);
+        objectAnimator.start();
+        //
+        textView_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(getActivity(), SexualDayRecordActivity.class), TO_LIST);
             }
         });
-        textView_sexual.setOnLongClickListener(new View.OnLongClickListener() {
+        textView_title.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 AddSexualDayDialog addSexualDayDialog = new AddSexualDayDialog(new DateTime());
@@ -108,9 +106,6 @@ public class ActionBarFragment extends Fragment {
             if (context instanceof OnActionFragmentBackListener) {
                 backListener = (OnActionFragmentBackListener) context;
             }
-            if (context instanceof OnActionFragmentSettingListener) {
-                settingListener = (OnActionFragmentSettingListener) context;
-            }
         } catch (Exception e) {
         }
     }
@@ -120,12 +115,12 @@ public class ActionBarFragment extends Fragment {
         try {
             SexualDay lastSexualDay = dataContext.getLastSexualDay();
             if (lastSexualDay == null) {
-                textView_sexual.setText("无记录");
+                textView_title.setText("无记录");
             } else {
                 long span = new DateTime().getTimeInMillis() - lastSexualDay.getDateTime().getTimeInMillis();
                 int day = (int) (span / 60000 / 60 / 24);
                 int hour = (int) (span / 60000 / 60 % 24);
-                textView_sexual.setText(_String.concat(day > 0 ? day + "天" : "", hour + "小时"));
+                textView_title.setText(_String.concat(day > 0 ? day + "天" : "", hour + "小时"));
             }
         } catch (Exception e) {
         }
@@ -147,13 +142,6 @@ public class ActionBarFragment extends Fragment {
     public interface OnActionFragmentBackListener {
         // TODO: 更新参数的类型和名字
         void onBackListener();
-    }
-
-    /**
-     * 如果要使用设置按钮，需实现此接口
-     */
-    public interface OnActionFragmentSettingListener {
-        void onSettingListener();
     }
 
     public class AddSexualDayDialog {

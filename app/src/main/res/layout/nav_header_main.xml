@@ -15,7 +15,7 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/left_menu_background"
+            android:background="@color/colorPrimary"
             android:padding="10dp">
 
             <ImageView
