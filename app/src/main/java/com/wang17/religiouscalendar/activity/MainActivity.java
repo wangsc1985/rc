@@ -42,7 +42,6 @@ import com.wang17.religiouscalendar.helper.CalendarHelper;
 import com.wang17.religiouscalendar.helper.GanZhi;
 import com.wang17.religiouscalendar.helper.Lunar;
 import com.wang17.religiouscalendar.helper.Religious;
-import com.wang17.religiouscalendar.helper.UpdateManager;
 import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.helper._String;
@@ -147,7 +146,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             uiHandler = new Handler();
             dataContext = new DataContext(MainActivity.this);
             isFirstTime = true;
-            requestPermission();
+
+            // 确认权限
+//            requestPermission();
+
             setContentView(R.layout.activity_main);
 
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -173,9 +175,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //
             initializeComponent();
 
-
-            UpdateManager manager = new UpdateManager(MainActivity.this);
-            manager.checkUpdate();
+//
+//            UpdateManager manager = new UpdateManager(MainActivity.this);
+//            manager.checkUpdate();
 
             Log.i("wangsc", "MainActivity have loaded ... ");
         } catch (Exception ex) {
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             include_banner = getLayoutInflater().inflate(R.layout.include_main_banner, null);
             imageView_banner = (ImageView) include_banner.findViewById(R.id.imageView_banner);
             imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-            imageView_banner.setOnLongClickListener(new View.OnLongClickListener() {
+            imageView_banner.setOnLongClickListener(new View.OnLongClickListener() {//2130903043
                 @Override
                 public boolean onLongClick(View v) {
                     try {
@@ -1042,24 +1044,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TO_SETTING) {
-/*            if (resultCode == SettingActivity.CALENDER_CHANGED) {
-                refreshCalendarWithDialog("配置已更改，正在重新加载...");
-            } else if (resultCode == SettingActivity.BANNER_CHANGED) {
-                Setting setting = dataContext.getSetting("banner");
-                int itemPosition = Integer.parseInt(setting.getValue());
-//                imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-
-
-//                if (layout_under_banner.getVisibility() == View.VISIBLE) {
-                imageView_banner = (ImageView) include_banner.findViewById(R.id.imageView_banner);
-                imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-//                }
-//                if (layout_upper_banner.getVisibility() == View.VISIBLE) {
-                imageView_banner = (ImageView) include_under_banner.findViewById(R.id.imageView_banner);
-                imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-//                }
-            }*/
-
             if (SettingActivity.calenderChanged) {
                 refreshCalendarWithDialog("配置已更改，正在重新加载...");
             }

@@ -25,12 +25,12 @@ public class _Session extends AppCompatActivity {
         welcomes.add(new PicNameRes(R.drawable.welcome004, "观世音菩萨五"));
 
         banners = new ArrayList<PicNameRes>();
-        banners.add(new PicNameRes(R.mipmap.banner002, "释迦牟尼佛"));
-        banners.add(new PicNameRes(R.mipmap.banner001, "弥勒菩萨 - 插秧偈"));
-        banners.add(new PicNameRes(R.mipmap.banner004, "大智度论 - 佛号功德"));
-        banners.add(new PicNameRes(R.mipmap.banner003, "善导大师 - 念佛法要"));
-        banners.add(new PicNameRes(R.mipmap.banner006, "龙门大佛"));
-        banners.add(new PicNameRes(R.drawable.banner000, "相约春季"));
+        banners.add(new PicNameRes(R.mipmap.banner01, "释迦牟尼佛"));
+        banners.add(new PicNameRes(R.mipmap.banner02, "弥勒菩萨 - 插秧偈"));
+        banners.add(new PicNameRes(R.mipmap.banner03, "大智度论 - 佛号功德"));
+        banners.add(new PicNameRes(R.mipmap.banner04, "善导大师 - 念佛法要"));
+        banners.add(new PicNameRes(R.mipmap.banner05, "龙门大佛"));
+        banners.add(new PicNameRes(R.drawable.banner05, "相约春季"));
     }
 
 

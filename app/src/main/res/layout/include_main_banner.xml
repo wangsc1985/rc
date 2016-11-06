@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription=""
-        android:src="@drawable/banner006"
+        android:src="@mipmap/banner01"
         android:id="@+id/imageView_banner"
         android:background="#2633a1" />
 
