@@ -2,5 +2,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <corners android:radius="2.0dp" />
     <!-- 圆角，你也可以对不同的角设置不同的数值 -->
-    <solid android:color="@color/accent_material_light"></solid>
+    <solid android:color="@color/colorPrimary"></solid>
 </shape>

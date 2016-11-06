@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/calendarItemContainer"
     android:layout_width="45dp"
     android:layout_height="45dp"
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <View android:layout_height="fill_parent"
-        android:layout_width="fill_parent"
-        android:background="@drawable/is_today_45"
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/calendar_item_today"
         android:id="@+id/calendarItem_cvIsToday"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="false"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"></View>
+        android:visibility="invisible" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -49,17 +45,20 @@
             android:layout_marginTop="-2dp" />
     </LinearLayout>
 
-    <View android:layout_height="45dp"
+    <ImageView
         android:layout_width="45dp"
-        android:background="@drawable/un_religious_day_160"
+        android:layout_height="45dp"
+        android:src="@drawable/un_religious_day_160"
         android:id="@+id/calendarItem_cvIsUnReligious"
         android:visibility="invisible"
-        android:layout_centerInParent="true"></View>
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_horizontal" />
 
-    <View android:layout_height="match_parent"
+    <ImageView
         android:layout_width="match_parent"
-        android:background="@drawable/selected_day_45"
+        android:layout_height="match_parent"
+        android:src="@drawable/calendar_item_selected"
         android:id="@+id/calendarItem_cvIsSelected"
-        android:visibility="invisible"></View>
+        android:visibility="invisible" />
 
-</RelativeLayout>
+</FrameLayout>

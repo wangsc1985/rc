@@ -414,9 +414,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
             TextView ci_tvYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
             TextView ci_tvNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
-            View ci_cvIsToday = (View) convertView.findViewById(R.id.calendarItem_cvIsToday);
-            View ci_cvIsSelected = (View) convertView.findViewById(R.id.calendarItem_cvIsSelected);
-            View ci_cvIsUnReligious = (View) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
+            ImageView ci_cvIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
+            ImageView ci_cvIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
+            ImageView ci_cvIsUnReligious = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
             if (calendarItemsMap.containsKey(position)) {
                 CalendarItem calendarItem = calendarItemsMap.get(position);
                 DateTime today = DateTime.getToday();
