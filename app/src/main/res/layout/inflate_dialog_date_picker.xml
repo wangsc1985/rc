@@ -113,16 +113,15 @@
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:text="取消"
-                android:textSize="14dp" />
+                style="@style/button" />
 
             <Button
                 android:id="@+id/btnOK"
                 android:layout_width="100dp"
-                android:layout_height="50dp"
                 android:text="确定"
-                android:textSize="14dp" />
+                style="@style/button" />
 
         </LinearLayout>
     </LinearLayout>
