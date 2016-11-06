@@ -307,7 +307,7 @@ public class SettingActivity extends AppCompatActivity {
         spinner_duration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 3);
+                Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1);
                 if (!setting.getValue().equals(spinner_duration.getSelectedItemPosition() + "")) {
                     dataContext.editSetting(Setting.KEYS.welcome_duration.toString(),(spinner_duration.getSelectedItemPosition()) + "");
                     snackbarSaved();

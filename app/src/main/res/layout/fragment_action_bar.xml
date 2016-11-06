@@ -26,12 +26,12 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        app:srcCompat="@android:drawable/ic_menu_revert" />
+        android:src="@android:drawable/ic_menu_revert" />
 
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        app:srcCompat="@android:drawable/ic_menu_compass"
+        android:src="@android:drawable/ic_menu_compass"
         android:id="@+id/imageView_setting"
         android:layout_alignParentRight="true"
         android:scaleType="fitCenter" />

@@ -15,7 +15,7 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/accent_material_light"
+            android:background="@color/left_menu_background"
             android:padding="10dp">
 
             <ImageView
@@ -46,53 +46,24 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
+        <FrameLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:layout_gravity="bottom|right">
 
-            <FrameLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_gravity="bottom|right">
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/imageButton_setting"
+                android:src="@drawable/setting"
+                android:background="@drawable/menu_btn_bg"
+                android:padding="4dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:id="@+id/layout_setting">
-
-                    <TextView
-                        android:layout_width="40dp"
-                        android:layout_height="25dp"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="设置"
-                        android:id="@+id/textView_setting"
-                        android:textColor="#b90404"
-                        android:textSize="13dp"
-                        android:padding="4dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:background="@drawable/btn_round" />
-                </LinearLayout>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/imageButton_setting"
-                    android:src="@android:drawable/ic_menu_manage"
-                    android:background="@drawable/btn_round"
-                    android:padding="4dp"
-                    android:visibility="invisible"
-                    android:layout_gravity="center" />
-
-            </FrameLayout>
-
-        </LinearLayout>
+        </FrameLayout>
 
     </FrameLayout>
 

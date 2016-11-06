@@ -57,12 +57,13 @@
                     layout="@layout/include_main_info" />
             </LinearLayout>
         </ScrollView>
+
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/imageView_welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/imageView_welcome"
-        android:scaleType="fitCenter"
-        android:background="@color/bright_foreground_inverse_material_light" />
+        android:background="@color/bright_foreground_inverse_material_light"
+        android:scaleType="fitCenter" />
 </FrameLayout>

@@ -16,11 +16,15 @@ import android.widget.ProgressBar;
 
 import com.baidu.pcs.BaiduPCSClient;
 import com.baidu.pcs.BaiduPCSStatusListener;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.model.AppInfo;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,10 +32,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * @author coolszy
@@ -119,19 +119,32 @@ public class UpdateManager {
 
     private AppInfo getAppInfoFromMongoDB() {
         try {
-            String url = "https://api.mlab.com/api/1/databases/app-manager/collections/app-info?q={'packageName': '" + mContext.getPackageName() + "'}&apiKey=" + mongoApiKey;
-            OkHttpClient mOkHttpClient = new OkHttpClient();
-            Request request = new Request.Builder().url(url).build();
-            Response response = mOkHttpClient.newCall(request).execute();
-            if (response.isSuccessful()) {
-                final String htmlStr = response.body().string();
-                JSONArray jsonArray = new JSONArray(htmlStr);
-                JSONObject obj = jsonArray.getJSONObject(0);
-                return new AppInfo(obj.getString("packageName"), obj.getInt("versionCode"), obj.getString("versionName"), obj.getString("loadUrl"), obj.getString("accessToken"));
-            } else {
-                throw new Exception("response is not successful, Unexpected code " + response);
+
+            String mongoUrl = "mongodb://wangsc:351489@ds053126.mlab.com:53126/app-manager";
+            String collctionName = "app-info";
+            //
+            String whereKey = "PackageName";
+            Object whereValue = "com.wang17.religiouscalendar";
+            String orderKey = "decade";
+            Object orderValue = 1;
+            //
+            MongoClientURI uri = new MongoClientURI(mongoUrl);
+            MongoClient client = new MongoClient(uri);
+            DB db = client.getDB(uri.getDatabase());
+            DBCollection songs = db.getCollection(collctionName);
+            //
+            BasicDBObject findQuery = new BasicDBObject(whereKey, new BasicDBObject("$gte", whereValue));
+            BasicDBObject orderBy = new BasicDBObject(orderKey, orderValue);
+
+            DBCursor docs = songs.find(findQuery).sort(orderBy);
+
+            while (docs.hasNext()) {
+                DBObject doc = docs.next();
+                return new AppInfo((String)doc.get("PackageName"), (int)doc.get("VersionCode"), (String)doc.get("VersionName"), (String)doc.get("LoadUrl"), (String)doc.get("AccessToken"));
             }
+            return null;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

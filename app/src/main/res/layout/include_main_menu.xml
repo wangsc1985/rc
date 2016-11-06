@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:text="月"
-                android:textColor="#b90404"
+                android:textColor="@color/month_text_color"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:visibility="invisible" />
@@ -31,7 +31,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="月"
-                android:textColor="#b90404"
+                android:textColor="@color/month_text_color"
                 android:textSize="20dp"
                 android:gravity="center"
                 android:layout_gravity="center" />
@@ -67,7 +67,6 @@
         <FrameLayout
             android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
 
@@ -76,43 +75,45 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="今"
-                android:textColor="#b90404"
+                android:textColor="@color/month_text_color"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:visibility="invisible"
                 android:layout_gravity="center" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:id="@+id/layout_leftMenu">
+            <!--<LinearLayout-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:id="@+id/layout_leftMenu"-->
+                <!--android:visibility="gone">-->
 
-                <TextView
-                    android:layout_width="40dp"
-                    android:layout_height="25dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="菜单"
-                    android:id="@+id/textView_leftMenu"
-                    android:textColor="#b90404"
-                    android:textSize="13dp"
-                    android:padding="4dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:background="@drawable/btn_round" />
-            </LinearLayout>
+                <!--<TextView-->
+                    <!--android:layout_width="40dp"-->
+                    <!--android:layout_height="25dp"-->
+                    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                    <!--android:text="菜单"-->
+                    <!--android:id="@+id/textView_leftMenu"-->
+                    <!--android:textColor="@color/month_text_color"-->
+                    <!--android:textSize="13dp"-->
+                    <!--android:padding="4dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:gravity="center"-->
+                    <!--android:background="@drawable/btn_round" />-->
+            <!--</LinearLayout>-->
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/imageButton_leftMenu"
                 android:padding="4dp"
                 android:layout_gravity="center"
-                android:src="@android:drawable/ic_menu_agenda"
-                android:background="@drawable/btn_round"
-                android:visibility="invisible" />
+                android:src="@drawable/menu"
+                android:visibility="visible"
+                android:scaleType="fitCenter"
+                android:background="@drawable/menu_btn_bg" />
         </FrameLayout>
 
     </RelativeLayout>

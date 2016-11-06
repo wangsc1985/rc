@@ -6,12 +6,15 @@ import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,6 +43,7 @@ import com.wang17.religiouscalendar.helper.CalendarHelper;
 import com.wang17.religiouscalendar.helper.GanZhi;
 import com.wang17.religiouscalendar.helper.Lunar;
 import com.wang17.religiouscalendar.helper.Religious;
+import com.wang17.religiouscalendar.helper.UpdateManager;
 import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.helper._String;
@@ -56,12 +60,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -106,6 +117,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
     }
 
+    private void requestPermission() {
+        List<String> pers = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this, INTERNET) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{INTERNET}, REQUEST_PERMISSION_INTERNET);
+            pers.add(INTERNET);
+        }
+        if (ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+            pers.add(READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+            pers.add(READ_EXTERNAL_STORAGE);
+        }
+        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
+            pers.add(WRITE_EXTERNAL_STORAGE);
+        }
+
+        String[] permissions = (String[]) pers.toArray(new String[pers.size()]);
+        if (permissions.length > 0)
+            ActivityCompat.requestPermissions(this, permissions, 0);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -114,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             uiHandler = new Handler();
             dataContext = new DataContext(MainActivity.this);
             isFirstTime = true;
-
+            requestPermission();
             setContentView(R.layout.activity_main);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setVisibility(View.GONE);
@@ -144,8 +178,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             initializeComponent();
 
 
-//            UpdateManager manager = new UpdateManager(MainActivity.this);
-//            manager.checkUpdate();
+            UpdateManager manager = new UpdateManager(MainActivity.this);
+            manager.checkUpdate();
 
             Log.i("wangsc", "MainActivity have loaded ... ");
         } catch (Exception ex) {
@@ -236,15 +270,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             imageButton_leftMenu = (ImageButton) findViewById(R.id.imageButton_leftMenu);
             imageButton_settting = (ImageButton) findViewById(R.id.imageButton_setting);
-            layout_leftMenu = (LinearLayout) findViewById(R.id.layout_leftMenu);
-            layout_setting = (LinearLayout) findViewById(R.id.layout_setting);
 
             imageButton_leftMenu.setOnClickListener(leftMenuClick);
             imageButton_leftMenu.setOnLongClickListener(leftMenuLongClick);
             imageButton_settting.setOnClickListener(settingClick);
-            layout_leftMenu.setOnClickListener(leftMenuClick);
-            layout_leftMenu.setOnLongClickListener(leftMenuLongClick);
-            layout_setting.setOnClickListener(settingClick);
 
 
             AssetManager mgr = getAssets();//得到AssetManager
@@ -274,12 +303,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // button_today
             button_today = (TextView) findViewById(R.id.btnToday);
+            button_today.setTypeface(fontGF);
             button_today.setOnClickListener(btnToday_OnClickListener);
 
             // 信息栏
 //            yearMonth = (TextView) findViewById(R.id.tvYearMonth);
 //            yangliBig = (TextView) findViewById(R.id.tvYangLiBig);
             TextView selectMonth = (TextView) findViewById(R.id.textView_select_month);
+            selectMonth.setTypeface(fontGF);
             selectMonth.setOnClickListener(btnCurrentMonth_OnClickListener);
 
             textView_nongli = (TextView) findViewById(R.id.textView_selected_day);
@@ -378,9 +409,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
-//            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.calender_item, null);
+//            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.inflat_calender_item, null);
             getApplicationContext().getResources();
-            convertView = View.inflate(MainActivity.this, R.layout.calender_item, null);
+            convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
             TextView ci_tvYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
             TextView ci_tvNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
             View ci_cvIsToday = (View) convertView.findViewById(R.id.calendarItem_cvIsToday);
@@ -799,15 +830,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void setTodayEnable(Boolean enable) {
         if (enable) {
-//            button_today.setEnabled(true);
             button_today.setVisibility(View.VISIBLE);
-//            imageButton_leftMenu.setVisibility(View.INVISIBLE);
-            layout_leftMenu.setVisibility(View.INVISIBLE);
+            imageButton_leftMenu.setVisibility(View.INVISIBLE);
         } else {
-//            button_today.setEnabled(false);
             button_today.setVisibility(View.INVISIBLE);
-//            imageButton_leftMenu.setVisibility(View.VISIBLE);
-            layout_leftMenu.setVisibility(View.VISIBLE);
+            imageButton_leftMenu.setVisibility(View.VISIBLE);
         }
     }
 
