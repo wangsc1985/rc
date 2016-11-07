@@ -498,20 +498,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         }
     }
 
-    public static final int CALENDER_CHANGED = 1;
-    public static final int NO_CHANGE = 2;
-    public static final int BANNER_CHANGED = 3;
-
     @Override
     public void onBackPressed() {
-//        if (calenderChanged) {
-//            setResult(CALENDER_CHANGED);
-//        } else if (bannerChanged) {
-//            setResult(BANNER_CHANGED);
-//        } else {
-//            setResult(NO_CHANGE);
-//        }
-
         super.onBackPressed();
     }
 

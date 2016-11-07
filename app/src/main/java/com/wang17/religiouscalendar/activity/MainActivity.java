@@ -938,9 +938,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         byte[] longBt = new byte[8];
         byte[] intBt = new byte[4];
         byte[] nullBt = new byte[4];
-        int cursor = stream.read(longBt);
-        cursor = stream.read(intBt);
-        cursor = stream.read(nullBt);
+        stream.read(longBt);
+        stream.read(intBt);
+        int cursor = stream.read(nullBt);
 
         while (cursor != -1) {
             DateTime cal = new DateTime();
@@ -948,8 +948,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int solar = bytesToInt(intBt);
             SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
             solarTermMap.put(cal, solarTerm);
-            cursor = stream.read(longBt);
-            cursor = stream.read(intBt);
+            stream.read(longBt);
+            stream.read(intBt);
             cursor = stream.read(nullBt);
         }
         stream.close();
