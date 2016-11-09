@@ -131,7 +131,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         spinner_welcome.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome.toString(), 0).getValue()));
 
         this.initializeDuration();
-        spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 3).getValue()));
+        spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()));
 
         this.initializeBanner();
         spinner_banner.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), 0).getValue()));

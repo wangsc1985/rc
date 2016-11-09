@@ -30,6 +30,6 @@ public class _Session extends AppCompatActivity {
         banners.add(new PicNameRes(R.mipmap.banner03, "大智度论 - 佛号功德"));
         banners.add(new PicNameRes(R.mipmap.banner04, "善导大师 - 念佛法要"));
         banners.add(new PicNameRes(R.mipmap.banner05, "龙门大佛"));
-        banners.add(new PicNameRes(R.mipmap.banner05, "相约春季"));
+        banners.add(new PicNameRes(R.mipmap.banner06, "相约春季"));
     }
 }

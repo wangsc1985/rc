@@ -631,7 +631,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         preSelectedPosition = -1;
 
         if (isFirstTime) {
-            int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 3).getValue())+2) * 1000;
+            int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue())+2) * 1000;
             Log.i("wangsc","duration: "+duration);
             long span = duration - (System.currentTimeMillis() - xxxTimeMillis);
             if (span > 0) {
