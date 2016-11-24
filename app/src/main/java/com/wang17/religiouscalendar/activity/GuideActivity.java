@@ -135,14 +135,12 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     //当滑动状态改变时调用
     @Override
     public void onPageScrollStateChanged(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     //当当前页面被滑动时调用
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
-        // TODO Auto-generated method stub
 
     }
 

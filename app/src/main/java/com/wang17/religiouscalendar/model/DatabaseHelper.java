@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO 创建数据库后，对数据库的操作
+        // 创建数据库后，对数据库的操作
         db.execSQL("create table if not exists setting("
                 + "key TEXT PRIMARY KEY,"
                 + "value TEXT)");
@@ -32,7 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO 更改数据库版本的操作
+        // 更改数据库版本的操作
         if (oldVersion == 1 && newVersion == 2) {
         }
     }
@@ -40,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-        // TODO 每次成功打开数据库后首先被执行
+        // 每次成功打开数据库后首先被执行
     }
 
 

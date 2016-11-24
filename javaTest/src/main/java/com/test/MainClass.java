@@ -8,7 +8,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 
 public class MainClass {
@@ -44,11 +43,11 @@ public class MainClass {
             return null;
         }
     }
+
     public static void main(String[] args) throws UnknownHostException {
         try {
-            AppInfo info =  getAppInfoFromMongoDB();
             System.in.read();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

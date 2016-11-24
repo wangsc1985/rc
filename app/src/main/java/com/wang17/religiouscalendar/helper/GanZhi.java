@@ -90,34 +90,41 @@ public class GanZhi {
     private void convertToGanZhi(com.wang17.religiouscalendar.model.DateTime dateTime) throws Exception {
         if (dateTime.compareTo(MINIMAL_DATE) == -1 || dateTime.compareTo(MAXIMAL_DATE) == 1) {
             throw new Exception(_String.concat("当前时间：【", dateTime.toShortDateString(), "】超出时间允许范围【",
-                    MINIMAL_DATE.getYear() , "年", MINIMAL_DATE.getMonth() , "月", MINIMAL_DATE.getDay() , "日",
+                    MINIMAL_DATE.getYear(), "年", MINIMAL_DATE.getMonth(), "月", MINIMAL_DATE.getDay(), "日",
                     " - ",
-                    MAXIMAL_DATE.getYear() , "年", MAXIMAL_DATE.getMonth() , "月", MAXIMAL_DATE.getDay() , "日", "】！"));
+                    MAXIMAL_DATE.getYear(), "年", MAXIMAL_DATE.getMonth(), "月", MAXIMAL_DATE.getDay(), "日", "】！"));
         }
         // 年干支
 
-        com.wang17.religiouscalendar.model.DateTime cal =new DateTime(2015,1,1);
+        com.wang17.religiouscalendar.model.DateTime tmpCalendar = new DateTime(2015, 1, 1);
         com.wang17.religiouscalendar.model.DateTime today = dateTime.getDate();
         int years = today.getYear() - 1955;
 
+        /***************** 核对干支年 ******************/
+        /**
+         * 因为在八字干支上，一年的开始并不是阳历上的1月1日，也不是农历的大年初一，而是当年的立春。
+         * 而每年阳历2月初的3-6号为立春日。所以在每年的2月初立春日之前的日期，仍然算作是上一年，years需要减1。
+         */
+        // 找到今年的立春日。
         for (Map.Entry<com.wang17.religiouscalendar.model.DateTime, SolarTerm> entry : this.solarTermMap.entrySet()) {
-            if (entry.getKey().getYear()==today.getYear()&&entry.getValue()==SolarTerm.立春) {
-                cal.set(entry.getKey().getYear(),entry.getKey().getMonth(),entry.getKey().getDay(),0,0,0);
+            if (entry.getKey().getYear() == today.getYear() && entry.getValue() == SolarTerm.立春) {
+                tmpCalendar.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().getDay(), 0, 0, 0);
                 break;
             }
         }
-        if (today.compareTo(cal)==-1 )
-        {
-            years --;
+        // 如果当天在立春日前，years减1。
+        if (today.compareTo(tmpCalendar) == -1) {
+            years--;
         }
         this.tianGanYear = tianGan[((int) (years % 10) + 2) % 10];
         this.diZhiYear = diZhi[((int) (years % 12) + 8) % 12];
+        /************************************/
 
         // 月干支
         Map.Entry<com.wang17.religiouscalendar.model.DateTime, SolarTerm> nextSolarTerm = null;
         for (Map.Entry<com.wang17.religiouscalendar.model.DateTime, SolarTerm> entry : this.solarTermMap.entrySet()) {
-            cal.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().getDay(), 0, 0, 0);
-            if (cal.compareTo(today) == 1) {
+            tmpCalendar.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().getDay(), 0, 0, 0);
+            if (tmpCalendar.compareTo(today) == 1) { // 遍历历年24节气数据，当date>today的时候，停止，记录下此节气的日期。
                 nextSolarTerm = entry;
                 break;
             }

@@ -119,7 +119,9 @@ public class Religious {
         /// 春分 雷将发声。犯者生子五官四肢不全。父母有灾。宜从惊蛰节禁起。戒过一月。
         /// 秋分 杀气浸盛。阳气日衰。宜从白露节禁起。戒过一月。
         /// 此二节之前三后三共七日。犯之必得危疾。尤宜切戒。
+        long tts = System.currentTimeMillis();
         Map.Entry<DateTime, SolarTerm> solar = find(startDate.addDays(-3), endDate.addDays(3), SolarTerm.春分);
+        Log.i("wangsc-runtime", _String.concat(" find(startDate.addDays(-3), endDate.addDays(3), SolarTerm.春分)，用时：", (double) ( System.currentTimeMillis() - tts) / 1000, "秒"));
 
         if (solar != null) {
             this.AddReligiousDay(solar.getKey().addDays(-3).getDate(), "春分前三日。犯之必得危疾。尤宜切戒。");
@@ -130,7 +132,9 @@ public class Religious {
             this.AddReligiousDay(solar.getKey().addDays(2).getDate(), "春分后二日。犯之必得危疾。尤宜切戒。");
             this.AddReligiousDay(solar.getKey().addDays(3).getDate(), "春分后三日。犯之必得危疾。尤宜切戒。");
         }
+        tts = System.currentTimeMillis();
         solar = find(startDate.addDays(-3), endDate.addDays(3), SolarTerm.秋分);
+        Log.i("wangsc-runtime", _String.concat(" find(startDate.addDays(-3), endDate.addDays(3), SolarTerm.秋分)，用时：", (double) ( System.currentTimeMillis() - tts) / 1000, "秒"));
         if (solar != null) {
             this.AddReligiousDay(solar.getKey().addDays(-3).getDate(), "秋分前三日。犯之必得危疾。尤宜切戒。");
             this.AddReligiousDay(solar.getKey().addDays(-2).getDate(), "秋分前二日。犯之必得危疾。尤宜切戒。");
@@ -141,6 +145,7 @@ public class Religious {
             this.AddReligiousDay(solar.getKey().addDays(3).getDate(), "秋分后三日。犯之必得危疾。尤宜切戒。");
         }
         long dt2 = new DateTime().getTimeInMillis();
+
         Log.i("wangsc-runtime", _String.concat("获取二分日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
 
         dt1 = new DateTime().getTimeInMillis();
@@ -204,6 +209,7 @@ public class Religious {
 
 
         dt1 = new DateTime().getTimeInMillis();
+        long ttt =0;
         /// 四立日，四绝日 犯之减寿五年。
         solar = find(startDate.addDays(-60), endDate.addDays(1), SolarTerm.立春);
         if (solar != null) {
@@ -216,7 +222,11 @@ public class Religious {
                 int count = 1;
                 while (true) {
                     start = start.addDays(1);
+
+                    tts = System.currentTimeMillis();
                     GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap);
+                    ttt += System.currentTimeMillis() - tts;
+
                     if (ganzhi.getTianGanDay().equals("戊")) {
                         if (count == 5) {
                             this.AddReligiousDay(start, "春社日（立春后第五戊日）。犯之减寿五年。社日受胎者。毛发皆白。");
@@ -245,7 +255,9 @@ public class Religious {
                 int count = 1;
                 while (true) {
                     start = start.addDays(1);
+                    tts = System.currentTimeMillis();
                     GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap);
+                    ttt += System.currentTimeMillis() - tts;
                     if (ganzhi.getTianGanDay().equals("戊")) {
                         if (count == 5) {
                             this.AddReligiousDay(start, "秋社日（立秋后第五戊日）。犯之减寿五年。社日受胎者。毛发皆白。");
@@ -263,10 +275,12 @@ public class Religious {
             this.AddReligiousDay(solar.getKey().getDate(), "立冬日(四立日)。犯之减寿五年。");
         }
         dt2 = new DateTime().getTimeInMillis();
+        Log.i("wangsc-runtime", _String.concat("GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap) --- ", (double) ttt / 1000, "秒"));
         Log.i("wangsc-runtime", _String.concat("获取四立日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
 
         dt1 = new DateTime().getTimeInMillis();
 
+        ttt =0;
         /// 初伏：夏至后第三个庚日起到第四个庚日前一天的一段时间叫初伏，也叫头伏。犯之减寿一年。
         {
             solar = find3Fu(year, SolarTerm.夏至);
@@ -275,7 +289,9 @@ public class Religious {
             int count = 1;
             while (true) {
                 start = start.addDays(1);
+                tts = System.currentTimeMillis();
                 GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap);
+                ttt += System.currentTimeMillis() - tts;
                 if (ganzhi.getTianGanDay().equals("庚")) {
                     if (count == 3) {
                         chufuStartDate = start;
@@ -296,7 +312,9 @@ public class Religious {
             int count = 1;
             while (true) {
                 start = start.addDays(1);
+                tts = System.currentTimeMillis();
                 GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap);
+                ttt += System.currentTimeMillis() - tts;
                 if (ganzhi.getTianGanDay().equals("庚")) {
                     if (count == 1) {
                         mofuStartDate = start;
@@ -310,6 +328,7 @@ public class Religious {
             }
         }
         dt2 = new DateTime().getTimeInMillis();
+        Log.i("wangsc-runtime", _String.concat("GanZhi ganzhi = new GanZhi(start, this.solarTermTreeMap) --- ", (double) ttt / 1000, "秒"));
         Log.i("wangsc-runtime", _String.concat("获取三伏日，用时：", (double) (dt2 - dt1) / 1000, "秒"));
 
         dt1 = new DateTime().getTimeInMillis();

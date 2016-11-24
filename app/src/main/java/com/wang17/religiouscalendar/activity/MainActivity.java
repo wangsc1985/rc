@@ -11,9 +11,9 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,8 +36,11 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.tencent.stat.StatConfig;
+import com.tencent.stat.StatService;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
+import com.wang17.religiouscalendar.emnu.SolarTerm2;
 import com.wang17.religiouscalendar.helper.CalendarHelper;
 import com.wang17.religiouscalendar.helper.GanZhi;
 import com.wang17.religiouscalendar.helper.Lunar;
@@ -54,6 +57,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,16 +65,16 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.ACCESS_WIFI_STATE;
 import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_SETTINGS;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
-    private Typeface fontHWZS,fontGF;
+    private Typeface fontHWZS, fontGF;
     private DateTime selectedDate;
     // 值变量
     private int calendarItemCount, preSelectedPosition, todayPosition, currentYear, currentMonth;
@@ -115,33 +119,97 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
     }
 
-    private void requestPermission() {
-        List<String> pers = new ArrayList<>();
+/*    private void requestPermission() {
+
+*//*        <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+        <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.WRITE_SETTINGS"/>*//*
+
+        List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(this, INTERNET) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{INTERNET}, REQUEST_PERMISSION_INTERNET);
-            pers.add(INTERNET);
+//            ActivityCompat.requestPermissions(this, new String[]{INTERNET}, 0);
+            permissionList.add(INTERNET);
+        }
+        if (ContextCompat.checkSelfPermission(this, ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{ACCESS_NETWORK_STATE}, 1);
+            permissionList.add(INTERNET);
+        }
+        if (ContextCompat.checkSelfPermission(this, ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{ACCESS_WIFI_STATE}, 2);
+            permissionList.add(INTERNET);
         }
         if (ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-            pers.add(READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-            pers.add(READ_EXTERNAL_STORAGE);
+//            ActivityCompat.requestPermissions(this, new String[]{READ_PHONE_STATE}, 3);
+            permissionList.add(INTERNET);
         }
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-            pers.add(WRITE_EXTERNAL_STORAGE);
+//            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, 4);
+            permissionList.add(INTERNET);
         }
-
-        String[] permissions = (String[]) pers.toArray(new String[pers.size()]);
+        if (ContextCompat.checkSelfPermission(this, WRITE_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{WRITE_SETTINGS}, 5);
+            permissionList.add(INTERNET);
+        }
+        String[] permissions = permissionList.toArray(new String[permissionList.size()]);
         if (permissions.length > 0)
             ActivityCompat.requestPermissions(this, permissions, 0);
-    }
+    }*/
+
+/*    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == 0) {
+            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                new AlertDialog.Builder(this).setMessage("接受短信权限是必须的。").setNegativeButton("知道了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        MainActivity.this.finish();
+                    }
+                }).show();
+            }
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }*/
+
+    final private int REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS = 124;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: 2016/11/22 验证并申请权限
+
+        // TODO: 2016/11/22 ............
         try {
-            super.onCreate(savedInstanceState);
+//            convertToJavafile(R.raw.solar_50);
+            test(2016,SolarTerm2.小雪);
+        } catch (Exception e) {
+            _Helper.exceptionSnackbar(this,"",e.getMessage());
+        }
+
+        onCreateWrapper();
+    }
+
+    private void onCreateWrapper() {
+        try {
+            /****************腾讯云分析代码******************/
+            if (ContextCompat.checkSelfPermission(this, INTERNET) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(this, WRITE_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+                // 打开debug开关，可查看mta上报日志或错误
+                StatConfig.setDebugEnable(true);
+                // 调用统计接口，触发MTA并上报数据
+                StatService.trackCustomEvent(this, "onCreate", "");
+            }
+            /****************腾讯云分析代码******************/
+
             xxxTimeMillis = System.currentTimeMillis();
             uiHandler = new Handler();
             dataContext = new DataContext(MainActivity.this);
@@ -153,8 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             setContentView(R.layout.activity_main);
 
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             drawer.setDrawerListener(toggle);
             toggle.syncState();
             NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -350,25 +417,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
             return 7;
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
             TextView mTextView = new TextView(getApplicationContext());
             mTextView.setText(header[position]);
             mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -388,25 +451,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
             return calendarItemCount;
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
 //            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.inflat_calender_item, null);
             getApplicationContext().getResources();
             convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
@@ -594,12 +653,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // 获得当月戒期信息
         try {
-            long dt1 = new DateTime().getTimeInMillis();
             Religious religious = new Religious(MainActivity.this, currentYear, currentMonth, solarTermMap);
             religiousDays = religious.getReligiousDays();
             remarks = religious.getRemarks();
-            long dt2 = new DateTime().getTimeInMillis();
-            Log.i("wangsc-runtime", _String.concat("获取戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
         } catch (Exception ex) {
             religiousDays = new HashMap<DateTime, String>();
             remarks = new HashMap<DateTime, String>();
@@ -631,8 +687,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         preSelectedPosition = -1;
 
         if (isFirstTime) {
-            int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue())+2) * 1000;
-            Log.i("wangsc","duration: "+duration);
+            int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()) + 2) * 1000;
+            Log.i("wangsc", "duration: " + duration);
             long span = duration - (System.currentTimeMillis() - xxxTimeMillis);
             if (span > 0) {
                 try {
@@ -863,7 +919,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * 读取JAVA结构的二进制节气数据文件。
+     * 读取JAVA结构的二进制节气数据文件。将其二进制数据读取并转化存入TreeMap<DateTime, SolarTerm>中。
      *
      * @param resId 待读取的JAVA二进制文件。
      * @return
@@ -898,6 +954,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return result;
     }
 
+    public void test(){
+
+        /**
+         * solar300java.dat存储的是1999.01.16 --- 2050.12.22。
+         */
+        try {
+            List<String> date = new ArrayList<>();
+            File file = new File(Environment.getExternalStorageDirectory() + "/0000000/solar50java.dat");
+            DataInputStream dis = new DataInputStream(new FileInputStream(file));
+
+            try {
+                while (true) {
+                    date.add(new DateTime(dis.readLong()).toShortDateString());
+                }
+            } catch (EOFException ex) {
+                dis.close();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void test(int year,SolarTerm2 solarTerm){
+
+        try {
+            File file = new File(Environment.getExternalStorageDirectory() + "/0000000/solar50java.dat");
+            DataInputStream dis = new DataInputStream(new FileInputStream(file));
+            dis.skip(8*24*(year-1999)+8*solarTerm.getValue());
+            String date = new DateTime(dis.readLong()).toShortDateString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 将C#导出的二进制文件转化为JAVA数据结构存储的二进制文件，并保存为/mnt/sdcard/solar300.dat。
      *
@@ -905,25 +995,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @throws IOException
      * @throws Exception
      */
-    private void convertToJavafile(int resId) throws IOException, Exception {
-        Map<DateTime, SolarTerm> solarTermMap = loadCsharpSolarTerms(resId);
-        File file = new File("/mnt/sdcard/solar300.dat");
+    public void convertToJavafile(int resId) throws IOException, Exception {
+        List<SolarStruct> solarTermMap = loadCsharpSolarTerms(resId);
+
+        File file = new File(Environment.getExternalStorageDirectory() + "/0000000/solar50java.dat");
         if (!file.exists()) {
             file.createNewFile();
         }
         FileOutputStream fos = new FileOutputStream(file);
         DataOutputStream dos = new DataOutputStream(fos);
 
-        Set set = solarTermMap.entrySet();
-        Iterator i = set.iterator();
-        while (i.hasNext()) {
-            Map.Entry<DateTime, SolarTerm> solar = (Map.Entry<DateTime, SolarTerm>) i.next();
-            dos.writeLong(solar.getKey().getTimeInMillis());
-            dos.writeInt(solar.getValue().getValue());
+        for(SolarStruct st : solarTermMap){
+            dos.writeLong(st.date);
         }
+
         dos.flush();
         dos.close();
         fos.close();
+    }
+
+    class SolarStruct {
+        public long date;
+        public SolarTerm solarTerm;
+        public SolarStruct(long d, SolarTerm s){
+            this.date = d;
+            solarTerm = s;
+        }
     }
 
     /**
@@ -932,8 +1029,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param resId 资源文件ID
      * @return
      */
-    private Map<DateTime, SolarTerm> loadCsharpSolarTerms(int resId) throws Exception {
-        Map<DateTime, SolarTerm> solarTermMap = new HashMap<DateTime, SolarTerm>();
+    private List<SolarStruct> loadCsharpSolarTerms(int resId) throws Exception {
+        List<SolarStruct> solarTermMap = new ArrayList<SolarStruct>();
         InputStream stream = getResources().openRawResource(resId);
         byte[] longBt = new byte[8];
         byte[] intBt = new byte[4];
@@ -943,11 +1040,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int cursor = stream.read(nullBt);
 
         while (cursor != -1) {
-            DateTime cal = new DateTime();
-            cal.setTimeInMillis(bytesToLong(longBt));
             int solar = bytesToInt(intBt);
             SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
-            solarTermMap.put(cal, solarTerm);
+            solarTermMap.add(new SolarStruct(bytesToLong(longBt), solarTerm));
             stream.read(longBt);
             stream.read(intBt);
             cursor = stream.read(nullBt);

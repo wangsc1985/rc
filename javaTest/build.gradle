@@ -4,4 +4,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/httpmime-4.2.jar')
     compile files('libs/mongo-java-driver-3.3.0.jar')
+    compile project(path: ':app')
 }
