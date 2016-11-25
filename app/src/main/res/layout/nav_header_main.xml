@@ -39,10 +39,18 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="QQ/微信：645708679"
+                android:text="微信：645708679"
                 android:textColor="#ffffff"
                 android:layout_gravity="center_horizontal"
                 android:textSize="14dp" />
+
+            <TextView
+                android:text="加微信请注明“寿康宝鉴”"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/textView11"
+                android:visibility="gone" />
 
         </LinearLayout>
 
