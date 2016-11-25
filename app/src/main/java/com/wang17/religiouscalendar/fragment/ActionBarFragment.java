@@ -30,14 +30,14 @@ import java.util.Calendar;
 
 public class ActionBarFragment extends Fragment {
 
-    // TODO:  视图变量
+    // 视图变量
     View containerView;
     ImageView imageView_back;
     TextView textView_title;
-    // TODO:  类变量
+    // 类变量
     private OnActionFragmentBackListener backListener;
     private DataContext dataContext;
-    // TODO:  值变量
+    // 值变量
     public static final int TO_LIST = 0;
 
 
@@ -48,7 +48,7 @@ public class ActionBarFragment extends Fragment {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        // TODO: 2016/10/19 初始化类变量和值变量
+        // 初始化类变量和值变量
         super.onCreate(savedInstanceState);
         try {
             dataContext = new DataContext(getActivity());
@@ -140,7 +140,7 @@ public class ActionBarFragment extends Fragment {
      * 如果要使用返回按钮，需实现此接口
      */
     public interface OnActionFragmentBackListener {
-        // TODO: 更新参数的类型和名字
+        // 更新参数的类型和名字
         void onBackListener();
     }
 

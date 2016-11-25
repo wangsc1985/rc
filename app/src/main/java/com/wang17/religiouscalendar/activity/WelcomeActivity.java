@@ -2,6 +2,7 @@ package com.wang17.religiouscalendar.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.animation.AlphaAnimation;
@@ -9,7 +10,6 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import com.wang17.religiouscalendar.R;
-import com.wang17.religiouscalendar.helper.SettingKey;
 import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.model.DataContext;
@@ -69,10 +69,11 @@ public class WelcomeActivity extends ActionBarActivity {
             });
             welcomeImg.startAnimation(animation);
         } catch (Exception ex) {
-            _Helper.exceptionSnackbar(WelcomeActivity.this, "onCreate", ex.getMessage());
+            _Helper.printExceptionSycn(WelcomeActivity.this,uiHandler,ex);
         }
     }
 
+    private Handler uiHandler = new Handler();
     class splashhandler implements Runnable {
         public void run() {
             startActivity(new Intent(getApplication(), MainActivity.class));

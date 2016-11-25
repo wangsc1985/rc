@@ -3,6 +3,7 @@ package com.wang17.religiouscalendar.activity;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,10 +79,10 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
 
 
         } catch (Exception ex) {
-            _Helper.exceptionSnackbar(this, "onCreate", ex.getMessage());
+            _Helper.printExceptionSycn(this,uiHandler,ex);
         }
     }
-
+private Handler uiHandler = new Handler();
     private void initDots() {
         LinearLayout layout_dots = (LinearLayout) findViewById(R.id.layout_dots);
 
@@ -135,14 +136,12 @@ public class GuideActivity extends AppCompatActivity implements View.OnClickList
     //当滑动状态改变时调用
     @Override
     public void onPageScrollStateChanged(int arg0) {
-        // TODO Auto-generated method stub
 
     }
 
     //当当前页面被滑动时调用
     @Override
     public void onPageScrolled(int arg0, float arg1, int arg2) {
-        // TODO Auto-generated method stub
 
     }
 

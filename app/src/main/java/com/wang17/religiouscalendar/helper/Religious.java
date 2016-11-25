@@ -74,10 +74,12 @@ public class Religious {
 
         Map.Entry<DateTime, SolarTerm> solar = null;
         for (Map.Entry<DateTime, SolarTerm> entry : solarTermTreeMap.entrySet()) {
-            if (entry.getKey().getDate().compareTo(startDate) >= 0
-                    && entry.getKey().getDate().compareTo(endDate) <= 0
-                    && entry.getValue() == solarTerm) {
-                solar = entry;
+
+            if (entry.getKey().getDate().compareTo(startDate) >= 0) {
+                if (entry.getKey().getDate().compareTo(endDate) > 0)
+                    break;
+                if (entry.getValue() == solarTerm)
+                    solar = entry;
             }
         }
         return solar;

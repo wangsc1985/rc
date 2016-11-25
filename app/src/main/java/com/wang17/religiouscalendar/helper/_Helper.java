@@ -4,16 +4,40 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 
 /**
  * Created by 阿弥陀佛 on 2016/10/2.
  */
 public class _Helper {
-    public static void exceptionSnackbar(Context context, String method, String message) {
-        String activity = context.toString();
-        activity = activity.substring(activity.lastIndexOf(".") + 1, activity.indexOf("@"));
-        new AlertDialog.Builder(context).setMessage(_String.concat("来源：", _String.concat(activity, " -> ", method), "\n运行异常：", message)).setPositiveButton("知道了", null).show();
+
+    public static void printExceptionSycn(Context context, Handler handler, Exception e) {
+        try {
+            if (e.getStackTrace().length == 0)
+                return;
+
+            for (StackTraceElement ste : e.getStackTrace()) {
+                if (ste.getClassName().contains(context.getPackageName())) {
+                    String msg = "类名：\n" + ste.getClassName()
+                            + "\n方法名：\n" + ste.getMethodName()
+                            + "\n行号：" + ste.getLineNumber()
+                            + "\n错误信息：\n" + e.getMessage();
+
+                    final Context finalContext = context;
+                    final String message = msg;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            new AlertDialog.Builder(finalContext).setTitle("运行错误").setMessage(message).setPositiveButton("知道了", null).show();
+                        }
+                    });
+                    break;
+                }
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     /**

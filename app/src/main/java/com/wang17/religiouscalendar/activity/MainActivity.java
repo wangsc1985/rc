@@ -8,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
-    private Typeface fontHWZS,fontGF;
+    private Typeface fontHWZS, fontGF;
     private DateTime selectedDate;
     // 值变量
     private int calendarItemCount, preSelectedPosition, todayPosition, currentYear, currentMonth;
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (permissions.length > 0)
             ActivityCompat.requestPermissions(this, permissions, 0);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -181,10 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Log.i("wangsc", "MainActivity have loaded ... ");
         } catch (Exception ex) {
-            _Helper.exceptionSnackbar(MainActivity.this, "onCreate", ex.getMessage());
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
         }
     }
 
+    //region 事件
     View.OnClickListener leftMenuClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -214,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING);
         }
     };
+    //endregion
 
     /**
      * 六字名号呼吸效果。
@@ -256,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         dataContext.editSetting(Setting.KEYS.banner.toString(), position);
                         imageView_banner.setImageResource(_Session.banners.get(position).getResId());
                     } catch (Exception ex) {
-                        _Helper.exceptionSnackbar(MainActivity.this, "imageView_banner.setOnLongClickListener", ex.getMessage());
+                        _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
                     }
                     return true;
                 }
@@ -338,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }).start();
         } catch (Exception ex) {
-            _Helper.exceptionSnackbar(MainActivity.this, "initializeComponent", ex.getMessage());
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
         }
     }
 
@@ -350,25 +354,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
             return 7;
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
             TextView mTextView = new TextView(getApplicationContext());
             mTextView.setText(header[position]);
             mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -388,73 +388,72 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
         public int getCount() {
-            // TODO Auto-generated method stub
             return calendarItemCount;
         }
 
         @Override
         public Object getItem(int position) {
-            // TODO Auto-generated method stub
             return null;
         }
 
         @Override
         public long getItemId(int position) {
-            // TODO Auto-generated method stub
             return 0;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
 //            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.inflat_calender_item, null);
-            getApplicationContext().getResources();
-            convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
-            TextView ci_tvYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
-            TextView ci_tvNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
-            ImageView ci_cvIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
-            ImageView ci_cvIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
-            ImageView ci_cvIsUnReligious = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
-            if (calendarItemsMap.containsKey(position)) {
-                CalendarItem calendarItem = calendarItemsMap.get(position);
-                DateTime today = DateTime.getToday();
-                DateTime dafs = calendarItem.getYangLi().getDate();
-                ci_tvYangLi.setText(calendarItem.getYangLi().get(DateTime.DAY_OF_MONTH) + "");
-                // 农历月初，字体设置。
-                if (calendarItem.getNongLi().getDay() == 1) {
-                    ci_tvNongLi.setText(calendarItem.getNongLi().getMonthStr());
-                    ci_tvNongLi.setTextColor(Color.BLACK);
-                } else {
-                    ci_tvNongLi.setText(calendarItem.getNongLi().getDayStr());
-                }
-
-                // 如果是今天的View，则变换当前View主题
-                if (today.compareTo(calendarItem.getYangLi().getDate()) == 0) {
-                    ci_cvIsToday.setVisibility(View.VISIBLE);
-                    ci_tvYangLi.setTextColor(Color.WHITE);
-                    ci_tvNongLi.setTextColor(Color.WHITE);
-                    todayPosition = position;
-                }
-                // 标出选中日期的按钮
-                if (CalendarHelper.isSameDate(calendarItem.getYangLi(), selectedDate) && !CalendarHelper.isSameDate(calendarItem.getYangLi(), today)) {
-                    ci_cvIsSelected.setVisibility(View.VISIBLE);
-                    preSelectedPosition = position;
-                }
-                // 今天非戒期
-                if (calendarItem.getReligious() == null) {
-                    ci_cvIsUnReligious.setVisibility(View.VISIBLE);
-                }
-                // 显示节气
-                for (Map.Entry<DateTime, SolarTerm> entry : currentMonthSolarTerms.entrySet()) {
-                    today.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().get(DateTime.DAY_OF_MONTH), 0, 0, 0);
-                    if (CalendarHelper.isSameDate(today, calendarItem.getYangLi())) {
-                        ci_tvNongLi.setText(entry.getValue().toString());
-                        break;
+            try {
+                convertView = View.inflate(MainActivity.this, R.layout.inflat_calender_item, null);
+                TextView ci_tvYangLi = (TextView) convertView.findViewById(R.id.calenderItem_tv_YangLiDay);
+                TextView ci_tvNongLi = (TextView) convertView.findViewById(R.id.calendarItem_tv_NongLiDay);
+                ImageView ci_cvIsToday = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsToday);
+                ImageView ci_cvIsSelected = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsSelected);
+                ImageView ci_cvIsUnReligious = (ImageView) convertView.findViewById(R.id.calendarItem_cvIsUnReligious);
+                if (calendarItemsMap.containsKey(position)) {
+                    CalendarItem calendarItem = calendarItemsMap.get(position);
+                    DateTime today = DateTime.getToday();
+                    DateTime dafs = calendarItem.getYangLi().getDate();
+                    ci_tvYangLi.setText(calendarItem.getYangLi().get(DateTime.DAY_OF_MONTH) + "");
+                    // 农历月初，字体设置。
+                    if (calendarItem.getNongLi().getDay() == 1) {
+                        ci_tvNongLi.setText(calendarItem.getNongLi().getMonthStr());
+                        ci_tvNongLi.setTextColor(Color.BLACK);
+                    } else {
+                        ci_tvNongLi.setText(calendarItem.getNongLi().getDayStr());
                     }
+
+                    // 如果是今天的View，则变换当前View主题
+                    if (today.compareTo(calendarItem.getYangLi().getDate()) == 0) {
+                        ci_cvIsToday.setVisibility(View.VISIBLE);
+                        ci_tvYangLi.setTextColor(Color.WHITE);
+                        ci_tvNongLi.setTextColor(Color.WHITE);
+                        todayPosition = position;
+                    }
+                    // 标出选中日期的按钮
+                    if (CalendarHelper.isSameDate(calendarItem.getYangLi(), selectedDate) && !CalendarHelper.isSameDate(calendarItem.getYangLi(), today)) {
+                        ci_cvIsSelected.setVisibility(View.VISIBLE);
+                        preSelectedPosition = position;
+                    }
+                    // 今天非戒期
+                    if (calendarItem.getReligious() == null) {
+                        ci_cvIsUnReligious.setVisibility(View.VISIBLE);
+                    }
+                    // 显示节气
+                    for (Map.Entry<DateTime, SolarTerm> entry : currentMonthSolarTerms.entrySet()) {
+                        today.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().get(DateTime.DAY_OF_MONTH), 0, 0, 0);
+                        if (CalendarHelper.isSameDate(today, calendarItem.getYangLi())) {
+                            ci_tvNongLi.setText(entry.getValue().toString());
+                            break;
+                        }
+                    }
+                } else {
+                    ci_tvYangLi.setText("");
+                    ci_tvNongLi.setText("");
                 }
-            } else {
-                ci_tvYangLi.setText("");
-                ci_tvNongLi.setText("");
+            } catch (Exception e) {
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
             }
             return convertView;
         }
@@ -492,60 +491,64 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param seletedDateTime 当前选中的日期
      */
     private void refreshInfoLayout(DateTime seletedDateTime) {
-        if (calendarItemsMap.size() == 0) return;
+        try {
+            if (calendarItemsMap.size() == 0) return;
 
-        CalendarItem calendarItem = null;
-        for (Map.Entry<Integer, CalendarItem> entity : calendarItemsMap.entrySet()) {
-            if (CalendarHelper.isSameDate(entity.getValue().getYangLi(), seletedDateTime)) {
-                calendarItem = entity.getValue();
+            CalendarItem calendarItem = null;
+            for (Map.Entry<Integer, CalendarItem> entity : calendarItemsMap.entrySet()) {
+                if (CalendarHelper.isSameDate(entity.getValue().getYangLi(), seletedDateTime)) {
+                    calendarItem = entity.getValue();
+                }
             }
-        }
-        if (calendarItem == null) return;
+            if (calendarItem == null) return;
 //        yearMonth.setText(currentYear + "." + format(currentMonth + 1));
 //        yangliBig.setText(seletedDateTime.getDay() + "");
-        textView_nongli.setText(_String.concat(calendarItem.getYangLi().getYear(), "年", calendarItem.getYangLi().getMonth() + 1, "月", calendarItem.getYangLi().getDay(), "日"));
-        try {
-            GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
-            textView_ganzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
-                    gz.getTianGanMonth(), gz.getDiZhiMonth(), "月 ",
-                    gz.getTianGanDay(), gz.getDiZhiDay(), "日"));
-        } catch (Exception ex) {
-            _Helper.exceptionSnackbar(MainActivity.this, "refreshInfoLayout", ex.getMessage());
-        }
-
-        layout_religious.removeAllViews();
-
-        boolean haveReligious = calendarItem.getReligious() != null;
-        boolean haveRemarks = calendarItem.getRemarks() != null;
-        if (haveReligious) {
-            String[] religious = calendarItem.getReligious().split("\n");
-            int i = 1;
-            for (String str : religious) {
-                View view = View.inflate(MainActivity.this, R.layout.inflate_targ_religious, null);
-
-
-                TextView tv = (TextView) view.findViewById(R.id.textView_religious);
-                tv.setText(str);
-                tv.getPaint().setFakeBoldText(true);
-                tv.setTypeface(fontHWZS);
-
-                layout_religious.addView(view);
+            textView_nongli.setText(_String.concat(calendarItem.getYangLi().getYear(), "年", calendarItem.getYangLi().getMonth() + 1, "月", calendarItem.getYangLi().getDay(), "日"));
+            try {
+                GanZhi gz = new GanZhi(calendarItem.getYangLi(), this.solarTermMap);
+                textView_ganzhi.setText(_String.concat(gz.getTianGanYear(), gz.getDiZhiYear(), "年 ",
+                        gz.getTianGanMonth(), gz.getDiZhiMonth(), "月 ",
+                        gz.getTianGanDay(), gz.getDiZhiDay(), "日"));
+            } catch (Exception ex) {
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
             }
-        }
-        if (haveRemarks) {
-            String[] remarks = calendarItem.getRemarks().split("\n");
-            int i = 1;
 
-            for (String str : remarks) {
-                View view = View.inflate(MainActivity.this, R.layout.inflate_targ_note, null);
+            layout_religious.removeAllViews();
 
-                TextView tv = (TextView) view.findViewById(R.id.textView_note);
-                tv.setText(str);
-                tv.getPaint().setFakeBoldText(true);
-                tv.setTypeface(fontHWZS);
+            boolean haveReligious = calendarItem.getReligious() != null;
+            boolean haveRemarks = calendarItem.getRemarks() != null;
+            if (haveReligious) {
+                String[] religious = calendarItem.getReligious().split("\n");
+                int i = 1;
+                for (String str : religious) {
+                    View view = View.inflate(MainActivity.this, R.layout.inflate_targ_religious, null);
 
-                layout_religious.addView(view);
+
+                    TextView tv = (TextView) view.findViewById(R.id.textView_religious);
+                    tv.setText(str);
+                    tv.getPaint().setFakeBoldText(true);
+                    tv.setTypeface(fontHWZS);
+
+                    layout_religious.addView(view);
+                }
             }
+            if (haveRemarks) {
+                String[] remarks = calendarItem.getRemarks().split("\n");
+                int i = 1;
+
+                for (String str : remarks) {
+                    View view = View.inflate(MainActivity.this, R.layout.inflate_targ_note, null);
+
+                    TextView tv = (TextView) view.findViewById(R.id.textView_note);
+                    tv.setText(str);
+                    tv.getPaint().setFakeBoldText(true);
+                    tv.setTypeface(fontHWZS);
+
+                    layout_religious.addView(view);
+                }
+            }
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
     }
 
@@ -554,7 +557,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * 使用之前先设定currentYear,currentMonth。
      */
     private void refreshCalendarWithDialog(String dialogMessage) {
-        progressDialog = ProgressDialog.show(MainActivity.this, "", dialogMessage, true, false);
+        try {
+            progressDialog = ProgressDialog.show(MainActivity.this, "", dialogMessage, true, false);
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+        }
 
         new Thread() {
             @Override
@@ -571,88 +578,92 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @throws Exception
      */
     private void refreshCalendar() {
-        int maxDayInMonth = 0;
-        DateTime tmpCalendar = new DateTime(currentYear, currentMonth, 1);
-        calendarItemCount = maxDayInMonth = tmpCalendar.getActualMaximum(DateTime.DAY_OF_MONTH);
-        calendarItemCount += tmpCalendar.get(DateTime.DAY_OF_WEEK) - 1;
-
-        // “今”按钮是否显示
-        DateTime today = DateTime.getToday();
-        if (selectedDate.compareTo(today) == 0) {
-            setTodayEnable(false);
-        } else {
-            setTodayEnable(true);
-        }
-
-        // 得到本月节气
-        currentMonthSolarTerms.clear();
-        for (Map.Entry<DateTime, SolarTerm> entry : solarTermMap.entrySet()) {
-            if (entry.getKey().getYear() == currentYear && entry.getKey().getMonth() == currentMonth) {
-                currentMonthSolarTerms.put(entry.getKey(), entry.getValue());
-            }
-        }
-
-        // 获得当月戒期信息
         try {
-            long dt1 = new DateTime().getTimeInMillis();
-            Religious religious = new Religious(MainActivity.this, currentYear, currentMonth, solarTermMap);
-            religiousDays = religious.getReligiousDays();
-            remarks = religious.getRemarks();
-            long dt2 = new DateTime().getTimeInMillis();
-            Log.i("wangsc-runtime", _String.concat("获取戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
-        } catch (Exception ex) {
-            religiousDays = new HashMap<DateTime, String>();
-            remarks = new HashMap<DateTime, String>();
-            _Helper.exceptionSnackbar(MainActivity.this, "refreshCalendar", ex.getMessage());
-        }
+            int maxDayInMonth = 0;
+            DateTime tmpCalendar = new DateTime(currentYear, currentMonth, 1);
+            calendarItemCount = maxDayInMonth = tmpCalendar.getActualMaximum(DateTime.DAY_OF_MONTH);
+            calendarItemCount += tmpCalendar.get(DateTime.DAY_OF_WEEK) - 1;
 
-        // 得到填充日历控件所需要的数据
-        calendarItemsMap.clear();
-        for (int i = 1; i <= maxDayInMonth; i++) {
-            int week = tmpCalendar.get(DateTime.WEEK_OF_MONTH);
-            int day_week = tmpCalendar.get(DateTime.DAY_OF_WEEK);
-            int key = (week - 1) * 7 + day_week - 1;
-            DateTime newCalendar = new DateTime();
-            newCalendar.setTimeInMillis(tmpCalendar.getTimeInMillis());
-            CalendarItem item = new CalendarItem(newCalendar);
-            //
-            DateTime currentDate = newCalendar.getDate();
-            if (religiousDays.containsKey(currentDate)) {
-                item.setReligious(religiousDays.get(currentDate));
+            // “今”按钮是否显示
+            DateTime today = DateTime.getToday();
+            if (selectedDate.compareTo(today) == 0) {
+                setTodayEnable(false);
+            } else {
+                setTodayEnable(true);
             }
-            if (remarks.containsKey(currentDate)) {
-                item.setRemarks(remarks.get(currentDate));
-            }
-            calendarItemsMap.put(key, item);
-            tmpCalendar.add(DateTime.DAY_OF_MONTH, 1);
-        }
-        // 填充日历控件
-        todayPosition = -1;
-        preSelectedPosition = -1;
 
-        if (isFirstTime) {
-            int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue())+2) * 1000;
-            Log.i("wangsc","duration: "+duration);
-            long span = duration - (System.currentTimeMillis() - xxxTimeMillis);
-            if (span > 0) {
-                try {
-                    Thread.sleep(span);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            // 得到本月节气
+            currentMonthSolarTerms.clear();
+            for (Map.Entry<DateTime, SolarTerm> entry : solarTermMap.entrySet()) {
+                if (entry.getKey().getYear() == currentYear && entry.getKey().getMonth() == currentMonth) {
+                    currentMonthSolarTerms.put(entry.getKey(), entry.getValue());
                 }
             }
-        }
-        uiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                userCalender.setAdapter(calendarAdapter);
-                refreshInfoLayout(selectedDate);
-                imageView_welcome.setVisibility(View.INVISIBLE);
-                if (progressDialog != null)
-                    progressDialog.dismiss();
+
+            // 获得当月戒期信息
+            try {
+                long dt1 = new DateTime().getTimeInMillis();
+                Religious religious = new Religious(MainActivity.this, currentYear, currentMonth, solarTermMap);
+                religiousDays = religious.getReligiousDays();
+                remarks = religious.getRemarks();
+                long dt2 = new DateTime().getTimeInMillis();
+                Log.i("wangsc-runtime", _String.concat("获取戒期数据，用时：", (double) (dt2 - dt1) / 1000, "秒"));
+            } catch (Exception ex) {
+                religiousDays = new HashMap<DateTime, String>();
+                remarks = new HashMap<DateTime, String>();
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
             }
-        });
-        isFirstTime = false;
+
+            // 得到填充日历控件所需要的数据
+            calendarItemsMap.clear();
+            for (int i = 1; i <= maxDayInMonth; i++) {
+                int week = tmpCalendar.get(DateTime.WEEK_OF_MONTH);
+                int day_week = tmpCalendar.get(DateTime.DAY_OF_WEEK);
+                int key = (week - 1) * 7 + day_week - 1;
+                DateTime newCalendar = new DateTime();
+                newCalendar.setTimeInMillis(tmpCalendar.getTimeInMillis());
+                CalendarItem item = new CalendarItem(newCalendar);
+                //
+                DateTime currentDate = newCalendar.getDate();
+                if (religiousDays.containsKey(currentDate)) {
+                    item.setReligious(religiousDays.get(currentDate));
+                }
+                if (remarks.containsKey(currentDate)) {
+                    item.setRemarks(remarks.get(currentDate));
+                }
+                calendarItemsMap.put(key, item);
+                tmpCalendar.add(DateTime.DAY_OF_MONTH, 1);
+            }
+            // 填充日历控件
+            todayPosition = -1;
+            preSelectedPosition = -1;
+
+            if (isFirstTime) {
+                int duration = (Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()) + 2) * 1000;
+                Log.i("wangsc", "duration: " + duration);
+                long span = duration - (System.currentTimeMillis() - xxxTimeMillis);
+                if (span > 0) {
+                    try {
+                        Thread.sleep(span);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    userCalender.setAdapter(calendarAdapter);
+                    refreshInfoLayout(selectedDate);
+                    imageView_welcome.setVisibility(View.INVISIBLE);
+                    if (progressDialog != null)
+                        progressDialog.dismiss();
+                }
+            });
+            isFirstTime = false;
+        } catch (NumberFormatException e) {
+            _Helper.printExceptionSycn(this, uiHandler, e);
+        }
     }
 
 //    private Handler handler = new Handler() {
@@ -686,7 +697,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MonthPickerDialog monthPickerDialog = new MonthPickerDialog(currentYear, currentMonth);
                 monthPickerDialog.show();
             } catch (Exception ex) {
-                _Helper.exceptionSnackbar(MainActivity.this, "refreshCalendar", ex.getMessage());
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
             }
         }
     };
@@ -699,42 +710,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
          * @param month 0 - 11
          */
         public MonthPickerDialog(int year, int month) {
-            dialog = new Dialog(MainActivity.this);
-            dialog.setContentView(R.layout.inflate_date_picker_dialog);
-            dialog.setTitle("选择月份");
+            try {
+                dialog = new Dialog(MainActivity.this);
+                dialog.setContentView(R.layout.inflate_date_picker_dialog);
+                dialog.setTitle("选择月份");
 
-            final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
-            final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
-            Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
-            Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
-            npYear.setMinValue(Lunar.MinYear);
-            npYear.setMaxValue(Lunar.MaxYear);
-            npYear.setValue(year);
-            npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-            npMonth.setMinValue(1);
-            npMonth.setMaxValue(12);
-            npMonth.setValue(month + 1);
-            npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-            btnOK.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int year = npYear.getValue();
-                    int month = npMonth.getValue() - 1;
-                    DateTime dateTime = new DateTime();
-                    dateTime.set(year, month, 1);
-                    int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
-                    int selectedDay = MainActivity.this.selectedDate.getDay();
-                    setSelectedDate(year, month, maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
-//                    refreshCalendarWithDialog();
-                    dialog.cancel();
-                }
-            });
-            btnCancle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
+                final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
+                final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
+                Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
+                Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
+                npYear.setMinValue(Lunar.MinYear);
+                npYear.setMaxValue(Lunar.MaxYear);
+                npYear.setValue(year);
+                npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+                npMonth.setMinValue(1);
+                npMonth.setMaxValue(12);
+                npMonth.setValue(month + 1);
+                npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+                btnOK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int year = npYear.getValue();
+                        int month = npMonth.getValue() - 1;
+                        DateTime dateTime = new DateTime();
+                        dateTime.set(year, month, 1);
+                        int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+                        int selectedDay = MainActivity.this.selectedDate.getDay();
+                        setSelectedDate(year, month, maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
+                        //                    refreshCalendarWithDialog();
+                        dialog.cancel();
+                    }
+                });
+                btnCancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.cancel();
+                    }
+                });
+            } catch (Exception e) {
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            }
         }
 
         public void show() {
@@ -748,27 +763,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AdapterView.OnItemClickListener userCalender_OnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!calendarItemsMap.containsKey(position)) return;
+            try {
+                if (!calendarItemsMap.containsKey(position)) return;
 
-            CalendarItem calendarItem = calendarItemsMap.get(position);
-            CalendarItem preCalendarItem = calendarItemsMap.get(preSelectedPosition);
-            if (todayPosition != -1) {
-                if (preSelectedPosition != -1 && preSelectedPosition != todayPosition) {
-                    parent.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
-                }
-                if (position != todayPosition) {
+                CalendarItem calendarItem = calendarItemsMap.get(position);
+                CalendarItem preCalendarItem = calendarItemsMap.get(preSelectedPosition);
+                if (todayPosition != -1) {
+                    if (preSelectedPosition != -1 && preSelectedPosition != todayPosition) {
+                        parent.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
+                    }
+                    if (position != todayPosition) {
+                        view.findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if (preSelectedPosition != -1) {
+                        parent.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
+                    }
                     view.findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.VISIBLE);
                 }
-            } else {
-                if (preSelectedPosition != -1) {
-                    parent.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
-                }
-                view.findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.VISIBLE);
-            }
-            preSelectedPosition = position;
+                preSelectedPosition = position;
 
-            //
-            setSelectedDate(calendarItem.getYangLi().getYear(), calendarItem.getYangLi().getMonth(), calendarItem.getYangLi().getDay());
+                //
+                setSelectedDate(calendarItem.getYangLi().getYear(), calendarItem.getYangLi().getMonth(), calendarItem.getYangLi().getDay());
+            } catch (Exception e) {
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            }
         }
     };
 
@@ -778,11 +797,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View.OnClickListener btnToday_OnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (preSelectedPosition != -1) {
-                userCalender.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
+            try {
+                if (preSelectedPosition != -1) {
+                    userCalender.getChildAt(preSelectedPosition).findViewById(R.id.calendarItem_cvIsSelected).setVisibility(View.INVISIBLE);
+                }
+                DateTime today = DateTime.getToday();
+                setSelectedDate(today.getYear(), today.getMonth(), today.getDay());
+            } catch (Exception e) {
+                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
             }
-            DateTime today = DateTime.getToday();
-            setSelectedDate(today.getYear(), today.getMonth(), today.getDay());
         }
     };
 
@@ -794,31 +817,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param day
      */
     public void setSelectedDate(int year, int month, int day) {
-        boolean monthHasChanged = false;
+        try {
+            boolean monthHasChanged = false;
 
-        // 如果新选中日期与当前月份不再同一月份，则刷新日历。
-        if (year != currentYear || month != currentMonth) {
-            monthHasChanged = true;
+            // 如果新选中日期与当前月份不再同一月份，则刷新日历。
+            if (year != currentYear || month != currentMonth) {
+                monthHasChanged = true;
+            }
+            this.selectedDate.set(year, month, day);
+
+            // 判断是否刷新自定义日历区域
+            if (monthHasChanged) {
+                currentYear = year;
+                currentMonth = month;
+                refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
+            }
+
+            // “今”按钮是否显示
+            DateTime today = DateTime.getToday();
+            if (year == today.getYear() && month == today.getMonth() && day == today.getDay()) {
+                setTodayEnable(false);
+            } else {
+                setTodayEnable(true);
+            }
+
+            //
+            refreshInfoLayout(selectedDate);
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
-        this.selectedDate.set(year, month, day);
-
-        // 判断是否刷新自定义日历区域
-        if (monthHasChanged) {
-            currentYear = year;
-            currentMonth = month;
-            refreshCalendarWithDialog(_String.concat("正在加载", currentYear, "年", currentMonth + 1, "月份", "戒期信息。"));
-        }
-
-        // “今”按钮是否显示
-        DateTime today = DateTime.getToday();
-        if (year == today.getYear() && month == today.getMonth() && day == today.getDay()) {
-            setTodayEnable(false);
-        } else {
-            setTodayEnable(true);
-        }
-
-        //
-        refreshInfoLayout(selectedDate);
     }
 
     /**
@@ -827,12 +854,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param enable
      */
     private void setTodayEnable(Boolean enable) {
-        if (enable) {
-            button_today.setVisibility(View.VISIBLE);
-            imageButton_leftMenu.setVisibility(View.INVISIBLE);
-        } else {
-            button_today.setVisibility(View.INVISIBLE);
-            imageButton_leftMenu.setVisibility(View.VISIBLE);
+        try {
+            final Boolean value = enable;
+            uiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (value) {
+                        button_today.setVisibility(View.VISIBLE);
+                        imageButton_leftMenu.setVisibility(View.INVISIBLE);
+                    } else {
+                        button_today.setVisibility(View.INVISIBLE);
+                        imageButton_leftMenu.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
     }
 
@@ -872,21 +909,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private TreeMap<DateTime, SolarTerm> loadJavaSolarTerms(int resId) throws IOException, Exception {
         TreeMap<DateTime, SolarTerm> result = new TreeMap<DateTime, SolarTerm>();
-        DataInputStream dis = new DataInputStream(getResources().openRawResource(resId));
-
-        long date = dis.readLong();
-        int solar = dis.readInt();
         try {
-            while (true) {
-                DateTime cal = new DateTime();
-                cal.setTimeInMillis(date);
-                SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
-                result.put(cal, solarTerm);
-                date = dis.readLong();
-                solar = dis.readInt();
+            DataInputStream dis = new DataInputStream(getResources().openRawResource(resId));
+
+            long date = dis.readLong();
+            int solar = dis.readInt();
+            try {
+                while (true) {
+                    DateTime cal = new DateTime();
+                    cal.setTimeInMillis(date);
+                    SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
+                    result.put(cal, solarTerm);
+                    date = dis.readLong();
+                    solar = dis.readInt();
+                }
+            } catch (EOFException ex) {
+                dis.close();
             }
-        } catch (EOFException ex) {
-            dis.close();
+        } catch (Resources.NotFoundException e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
         // 按照KEY排序TreeMap
 //        TreeMap<DateTime, SolarTerm> result = new TreeMap<DateTime, SolarTerm>(new Comparator<DateTime>() {
@@ -906,24 +949,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @throws Exception
      */
     private void convertToJavafile(int resId) throws IOException, Exception {
-        Map<DateTime, SolarTerm> solarTermMap = loadCsharpSolarTerms(resId);
-        File file = new File("/mnt/sdcard/solar300.dat");
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        FileOutputStream fos = new FileOutputStream(file);
-        DataOutputStream dos = new DataOutputStream(fos);
+        try {
+            Map<DateTime, SolarTerm> solarTermMap = loadCsharpSolarTerms(resId);
+            File file = new File("/mnt/sdcard/solar300.dat");
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            DataOutputStream dos = new DataOutputStream(fos);
 
-        Set set = solarTermMap.entrySet();
-        Iterator i = set.iterator();
-        while (i.hasNext()) {
-            Map.Entry<DateTime, SolarTerm> solar = (Map.Entry<DateTime, SolarTerm>) i.next();
-            dos.writeLong(solar.getKey().getTimeInMillis());
-            dos.writeInt(solar.getValue().getValue());
+            Set set = solarTermMap.entrySet();
+            Iterator i = set.iterator();
+            while (i.hasNext()) {
+                Map.Entry<DateTime, SolarTerm> solar = (Map.Entry<DateTime, SolarTerm>) i.next();
+                dos.writeLong(solar.getKey().getTimeInMillis());
+                dos.writeInt(solar.getValue().getValue());
+            }
+            dos.flush();
+            dos.close();
+            fos.close();
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
-        dos.flush();
-        dos.close();
-        fos.close();
     }
 
     /**
@@ -934,25 +981,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private Map<DateTime, SolarTerm> loadCsharpSolarTerms(int resId) throws Exception {
         Map<DateTime, SolarTerm> solarTermMap = new HashMap<DateTime, SolarTerm>();
-        InputStream stream = getResources().openRawResource(resId);
-        byte[] longBt = new byte[8];
-        byte[] intBt = new byte[4];
-        byte[] nullBt = new byte[4];
-        stream.read(longBt);
-        stream.read(intBt);
-        int cursor = stream.read(nullBt);
-
-        while (cursor != -1) {
-            DateTime cal = new DateTime();
-            cal.setTimeInMillis(bytesToLong(longBt));
-            int solar = bytesToInt(intBt);
-            SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
-            solarTermMap.put(cal, solarTerm);
+        try {
+            InputStream stream = getResources().openRawResource(resId);
+            byte[] longBt = new byte[8];
+            byte[] intBt = new byte[4];
+            byte[] nullBt = new byte[4];
             stream.read(longBt);
             stream.read(intBt);
-            cursor = stream.read(nullBt);
+            int cursor = stream.read(nullBt);
+
+            while (cursor != -1) {
+                DateTime cal = new DateTime();
+                cal.setTimeInMillis(bytesToLong(longBt));
+                int solar = bytesToInt(intBt);
+                SolarTerm solarTerm = SolarTerm.Int2SolarTerm(solar);
+                solarTermMap.put(cal, solarTerm);
+                stream.read(longBt);
+                stream.read(intBt);
+                cursor = stream.read(nullBt);
+            }
+            stream.close();
+        } catch (Resources.NotFoundException e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
-        stream.close();
         return solarTermMap;
     }
 
@@ -1043,36 +1096,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TO_SETTING) {
-            if (SettingActivity.calenderChanged) {
-                refreshCalendarWithDialog("配置已更改，正在重新加载...");
+        try {
+            if (requestCode == TO_SETTING) {
+                if (SettingActivity.calenderChanged) {
+                    refreshCalendarWithDialog("配置已更改，正在重新加载...");
+                }
+                if (SettingActivity.bannerChanged) {
+                    int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString()).getValue());
+                    imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
+                }
+                if (SettingActivity.bannerPositionChanged) {
+                    int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString()).getValue());
+                    setBannerPosition(itemPosition);
+                }
             }
-            if (SettingActivity.bannerChanged) {
-                int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString()).getValue());
-                imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-            }
-            if (SettingActivity.bannerPositionChanged) {
-                int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString()).getValue());
-                setBannerPosition(itemPosition);
-            }
+        } catch (NumberFormatException e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setBannerPosition(int itemPosition) {
-        switch (itemPosition) {
-            case 0:
-                layout_under_banner.removeAllViews();
-                layout_upper_banner.addView(include_banner);
-                break;
-            case 1:
-                layout_upper_banner.removeAllViews();
-                layout_under_banner.addView(include_banner);
-                break;
-            case 2:
-                layout_under_banner.removeAllViews();
-                layout_upper_banner.removeAllViews();
-                break;
+        try {
+            switch (itemPosition) {
+                case 0:
+                    layout_under_banner.removeAllViews();
+                    layout_upper_banner.addView(include_banner);
+                    break;
+                case 1:
+                    layout_upper_banner.removeAllViews();
+                    layout_under_banner.addView(include_banner);
+                    break;
+                case 2:
+                    layout_under_banner.removeAllViews();
+                    layout_upper_banner.removeAllViews();
+                    break;
+            }
+        } catch (Exception e) {
+            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
         }
     }
 }

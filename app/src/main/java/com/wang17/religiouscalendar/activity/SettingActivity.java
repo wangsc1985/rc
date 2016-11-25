@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class SettingActivity extends AppCompatActivity implements OnActionFragmentBackListener{
+public class SettingActivity extends AppCompatActivity implements OnActionFragmentBackListener {
 
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration, spinner_banner, spinner_bannerPosition;
     private Button btn_addMD;
@@ -57,7 +58,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         Log.i("wangsc", "SettingActivity is loading ...");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_action,ActionBarFragment.newInstance()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_action, ActionBarFragment.newInstance()).commit();
 
         try {
             spinner_zodiac1 = (Spinner) findViewById(R.id.spinner_zodiac1);
@@ -81,7 +82,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             this.initializeEvents();
             Log.i("wangsc", "SettingActivity have loaded ...");
         } catch (Exception ex) {
-            _Helper.exceptionSnackbar(SettingActivity.this, "onCreate", ex.getMessage());
+            _Helper.printExceptionSycn(SettingActivity.this, uiHandler, ex);
         }
     }
 
@@ -206,6 +207,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         }
     }
 
+    private Handler uiHandler = new Handler();
+
     private void initializeEvents() {
 //        textView_update.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -248,7 +251,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                     calenderChanged = true;
                     snackbar("添加成功");
                 } catch (Exception ex) {
-                    _Helper.exceptionSnackbar(SettingActivity.this, "initializeEvents", ex.getMessage());
+                    _Helper.printExceptionSycn(SettingActivity.this, uiHandler, ex);
                 }
             }
         });
@@ -308,7 +311,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1);
                 if (!setting.getValue().equals(spinner_duration.getSelectedItemPosition() + "")) {
-                    dataContext.editSetting(Setting.KEYS.welcome_duration.toString(),(spinner_duration.getSelectedItemPosition()) + "");
+                    dataContext.editSetting(Setting.KEYS.welcome_duration.toString(), (spinner_duration.getSelectedItemPosition()) + "");
                     snackbarSaved();
                 }
             }
