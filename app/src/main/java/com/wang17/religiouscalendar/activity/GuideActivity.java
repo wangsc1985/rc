@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.helper.ViewPagerAdapter;
 import com.wang17.religiouscalendar.helper._Helper;
@@ -157,5 +158,17 @@ private Handler uiHandler = new Handler();
         int position = (Integer) v.getTag();
         setCurView(position);
         setCurDot(position);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 }

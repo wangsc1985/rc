@@ -7,8 +7,8 @@ android {
         applicationId "com.wang17.religiouscalendar"
         minSdkVersion 11
         targetSdkVersion 24
-        versionCode 20
-        versionName '3.1.4'
+        versionCode 21
+        versionName '3.2.0'
     }
     buildTypes {
         release {
@@ -22,8 +22,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/Baidu-OAuth-SDK-Android-G-2.0.0.jar')
-    compile files('libs/Baidu-PCS-SDK-Android-L2-2.1.0.jar')
     compile files('libs/httpmime-4.2.jar')
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
     //    compile 'com.android.support:appcompat-v7:24.2.1'
@@ -35,4 +33,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile files('libs/mongo-java-driver-3.3.0.jar')
+    compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
+    compile files('libs/mta-sdk-2.2.0.jar')
+    compile files('libs/umeng-analytics-v6.0.4.jar')
+    compile files('libs/utdid4all-1.0.4.jar')
 }

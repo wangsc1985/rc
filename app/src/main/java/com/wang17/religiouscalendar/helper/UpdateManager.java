@@ -14,15 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.baidu.pcs.BaiduPCSClient;
-import com.baidu.pcs.BaiduPCSStatusListener;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.model.AppInfo;
 
@@ -120,28 +111,28 @@ public class UpdateManager {
     private AppInfo getAppInfoFromMongoDB() {
         try {
 
-            String mongoUrl = "mongodb://wangsc:351489@ds053126.mlab.com:53126/app-manager";
-            String collctionName = "app-info";
-            //
-            String whereKey = "PackageName";
-            Object whereValue = "com.wang17.religiouscalendar";
-            String orderKey = "decade";
-            Object orderValue = 1;
-            //
-            MongoClientURI uri = new MongoClientURI(mongoUrl);
-            MongoClient client = new MongoClient(uri);
-            DB db = client.getDB(uri.getDatabase());
-            DBCollection songs = db.getCollection(collctionName);
-            //
-            BasicDBObject findQuery = new BasicDBObject(whereKey, new BasicDBObject("$gte", whereValue));
-            BasicDBObject orderBy = new BasicDBObject(orderKey, orderValue);
-
-            DBCursor docs = songs.find(findQuery).sort(orderBy);
-
-            while (docs.hasNext()) {
-                DBObject doc = docs.next();
-                return new AppInfo((String)doc.get("PackageName"), (int)doc.get("VersionCode"), (String)doc.get("VersionName"), (String)doc.get("LoadUrl"), (String)doc.get("AccessToken"));
-            }
+//            String mongoUrl = "mongodb://wangsc:351489@ds053126.mlab.com:53126/app-manager";
+//            String collctionName = "app-info";
+//            //
+//            String whereKey = "PackageName";
+//            Object whereValue = "com.wang17.religiouscalendar";
+//            String orderKey = "decade";
+//            Object orderValue = 1;
+//            //
+//            MongoClientURI uri = new MongoClientURI(mongoUrl);
+//            MongoClient client = new MongoClient(uri);
+//            DB db = client.getDB(uri.getDatabase());
+//            DBCollection songs = db.getCollection(collctionName);
+//            //
+//            BasicDBObject findQuery = new BasicDBObject(whereKey, new BasicDBObject("$gte", whereValue));
+//            BasicDBObject orderBy = new BasicDBObject(orderKey, orderValue);
+//
+//            DBCursor docs = songs.find(findQuery).sort(orderBy);
+//
+//            while (docs.hasNext()) {
+//                DBObject doc = docs.next();
+//                return new AppInfo((String)doc.get("PackageName"), (int)doc.get("VersionCode"), (String)doc.get("VersionName"), (String)doc.get("LoadUrl"), (String)doc.get("AccessToken"));
+//            }
             return null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -317,27 +308,27 @@ public class UpdateManager {
         if (!file.exists())
             file.mkdir();
 
-        BaiduPCSClient api = new BaiduPCSClient();
-        api.setAccessToken(serverAppInfo.getAccessToken()); //mbOauth为使用Oauth得到的access_token
-        api.downloadFileFromStream(serverAppInfo.getLoadUrl(), cacheFile, new BaiduPCSStatusListener() {
-            @Override
-            public void onProgress(long l, long l1) {
-                final int value = (int) (l * PROGRESS_MAX / l1);
-
-                if (isCancelUpdate) return;
-
-                if (l >= l1) {
-                    installApk();
-                }
-                mbUiThreadHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (value <= PROGRESS_MAX)
-                            mProgress.setProgress(value);
-                    }
-                });
-            }
-        });
+//        BaiduPCSClient api = new BaiduPCSClient();
+//        api.setAccessToken(serverAppInfo.getAccessToken()); //mbOauth为使用Oauth得到的access_token
+//        api.downloadFileFromStream(serverAppInfo.getLoadUrl(), cacheFile, new BaiduPCSStatusListener() {
+//            @Override
+//            public void onProgress(long l, long l1) {
+//                final int value = (int) (l * PROGRESS_MAX / l1);
+//
+//                if (isCancelUpdate) return;
+//
+//                if (l >= l1) {
+//                    installApk();
+//                }
+//                mbUiThreadHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (value <= PROGRESS_MAX)
+//                            mProgress.setProgress(value);
+//                    }
+//                });
+//            }
+//        });
 
         mProgress.setProgress(0);
     }

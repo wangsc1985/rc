@@ -17,6 +17,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.fragment.ActionBarFragment;
 import com.wang17.religiouscalendar.helper._String;
@@ -266,5 +267,17 @@ public class SexualDayRecordActivity extends AppCompatActivity implements Action
         } catch (Exception e) {
             Log.e("wangsc", e.getMessage());
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 }

@@ -1,24 +1,25 @@
 package com.wang17.religiouscalendar.activity;
 
+import android.Manifest;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.SolarTerm;
 import com.wang17.religiouscalendar.helper.CalendarHelper;
@@ -59,20 +61,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // 视图变量
@@ -99,7 +102,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<DateTime, String> religiousDays, remarks;
     private Handler uiHandler;
 
-    private static final int STOP_PROGRESS_DIALOG = 0;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -116,41 +129,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onStop();
     }
 
-    private void requestPermission() {
-        List<String> pers = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, INTERNET) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{INTERNET}, REQUEST_PERMISSION_INTERNET);
-            pers.add(INTERNET);
-        }
-        if (ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-            pers.add(READ_PHONE_STATE);
-        }
-        if (ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
-            pers.add(READ_EXTERNAL_STORAGE);
-        }
-        if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-            pers.add(WRITE_EXTERNAL_STORAGE);
-        }
-
-        String[] permissions = (String[]) pers.toArray(new String[pers.size()]);
-        if (permissions.length > 0)
-            ActivityCompat.requestPermissions(this, permissions, 0);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+            MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);
             xxxTimeMillis = System.currentTimeMillis();
             uiHandler = new Handler();
             dataContext = new DataContext(MainActivity.this);
             isFirstTime = true;
-
-            // 确认权限
-//            requestPermission();
 
             setContentView(R.layout.activity_main);
 
@@ -177,13 +164,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //
             initializeComponent();
 
-//
+/********************************/
 //            UpdateManager manager = new UpdateManager(MainActivity.this);
 //            manager.checkUpdate();
-
+/********************************/
             Log.i("wangsc", "MainActivity have loaded ... ");
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
     }
 
@@ -260,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         dataContext.editSetting(Setting.KEYS.banner.toString(), position);
                         imageView_banner.setImageResource(_Session.banners.get(position).getResId());
                     } catch (Exception ex) {
-                        _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+                        _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
                     }
                     return true;
                 }
@@ -342,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }).start();
         } catch (Exception ex) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
     }
 
@@ -453,7 +440,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     ci_tvNongLi.setText("");
                 }
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
             return convertView;
         }
@@ -510,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         gz.getTianGanMonth(), gz.getDiZhiMonth(), "月 ",
                         gz.getTianGanDay(), gz.getDiZhiDay(), "日"));
             } catch (Exception ex) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
 
             layout_religious.removeAllViews();
@@ -548,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -560,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             progressDialog = ProgressDialog.show(MainActivity.this, "", dialogMessage, true, false);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
 
         new Thread() {
@@ -611,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception ex) {
                 religiousDays = new HashMap<DateTime, String>();
                 remarks = new HashMap<DateTime, String>();
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
 
             // 得到填充日历控件所需要的数据
@@ -697,7 +684,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 MonthPickerDialog monthPickerDialog = new MonthPickerDialog(currentYear, currentMonth);
                 monthPickerDialog.show();
             } catch (Exception ex) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, ex);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
         }
     };
@@ -748,7 +735,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
         }
 
@@ -786,7 +773,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //
                 setSelectedDate(calendarItem.getYangLi().getYear(), calendarItem.getYangLi().getMonth(), calendarItem.getYangLi().getDay());
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
         }
     };
@@ -804,7 +791,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DateTime today = DateTime.getToday();
                 setSelectedDate(today.getYear(), today.getMonth(), today.getDay());
             } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
             }
         }
     };
@@ -844,7 +831,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //
             refreshInfoLayout(selectedDate);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -869,7 +856,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -927,9 +914,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dis.close();
             }
         } catch (Resources.NotFoundException e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         // 按照KEY排序TreeMap
 //        TreeMap<DateTime, SolarTerm> result = new TreeMap<DateTime, SolarTerm>(new Comparator<DateTime>() {
@@ -969,7 +956,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dos.close();
             fos.close();
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
 
@@ -1002,9 +989,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             stream.close();
         } catch (Resources.NotFoundException e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         return solarTermMap;
     }
@@ -1035,7 +1022,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         buffer.flip();//need flip
         return buffer.getLong();
     }
-
 
     @Override
     public void onBackPressed() {
@@ -1111,7 +1097,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         } catch (NumberFormatException e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -1133,7 +1119,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     break;
             }
         } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this,uiHandler, e);
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
         }
     }
+
+    //region 友盟统计权限
+    @NeedsPermission({Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
+    void showUMAnalytics() {
+        // TODO: 当这些权限全部通过后，执行此方法。
+        //　调用统计接口，触发 MTA 并上传数据。
+        //  寿康宝鉴日历：583e55e58f4a9d18a2002075
+        //  test: 583d7eede88bad552b00138c
+        MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "583e55e58f4a9d18a2002075", "all", MobclickAgent.EScenarioType.E_UM_NORMAL);
+        MobclickAgent.startWithConfigure(config);
+    }
+
+    @OnShowRationale({Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
+    void showRationaleForUMAnalytics(final PermissionRequest request) {
+        // TODO: 解释了为什么需要此权限
+        // It passes in a PermissionRequest object which can be used to continue or abort the current permission request upon user input
+//        showRationaleDialog("软件运行数据分析权限，禁止此权限不会影响软件正常使用，但不利于软件的升级与维护。", request);
+    }
+
+    @OnPermissionDenied({Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
+    void showDeniedForUMAnalytics() {
+        // TODO: 如果用户拒绝权限，执行此方法
+//        new AlertDialog.Builder(this).setMessage("禁止此权限不会影响软件正常使用，但不利于软件的升级与维护。").setPositiveButton("知道了",null).show();
+    }
+
+    @OnNeverAskAgain({Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
+    void showNeverAskForUMAnalytics() {
+        // TODO: 如果用户对某一权限选择“再也不会问”，执行此方法
+//        new AlertDialog.Builder(this).setMessage("不会再询问此权限！").setPositiveButton("知道了",null).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // NOTE: delegate the permission handling to generated method
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    private void showRationaleDialog(String message, final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setPositiveButton("允许", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setNegativeButton("拒绝", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(@NonNull DialogInterface dialog, int which) {
+                        request.cancel();
+                    }
+                })
+                .setCancelable(false)
+                .setMessage(message)
+                .show();
+    }
+    //endregion
+
 }

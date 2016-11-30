@@ -16,9 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.baidu.pcs.BaiduPCSActionInfo;
-import com.baidu.pcs.BaiduPCSClient;
-import com.baidu.pcs.BaiduPCSStatusListener;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.exception.PermissionIsNotFullException;
 
@@ -373,27 +370,27 @@ public class UpdateManager_older {
 
                 mProgress.setMax(PROGRESS_MAX);
 
-                BaiduPCSClient api = new BaiduPCSClient();
-                api.setAccessToken(ACCESS_TOKEN); //mbOauth为使用Oauth得到的access_token
-                final BaiduPCSActionInfo.PCSSimplefiedResponse simplefiedResponse = api.downloadFileFromStream(SOURCE, TARGET, new BaiduPCSStatusListener() {
-                    @Override
-                    public void onProgress(long l, long l1) {
-                        final int value = (int) (l * PROGRESS_MAX / l1);
-
-                        if (isCancelUpdate) return;
-
-                        if (l >= l1) {
-                            installApk();
-                        }
-                        mbUiThreadHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (value <= PROGRESS_MAX)
-                                    mProgress.setProgress(value);
-                            }
-                        });
-                    }
-                });
+//                BaiduPCSClient api = new BaiduPCSClient();
+//                api.setAccessToken(ACCESS_TOKEN); //mbOauth为使用Oauth得到的access_token
+//                final BaiduPCSActionInfo.PCSSimplefiedResponse simplefiedResponse = api.downloadFileFromStream(SOURCE, TARGET, new BaiduPCSStatusListener() {
+//                    @Override
+//                    public void onProgress(long l, long l1) {
+//                        final int value = (int) (l * PROGRESS_MAX / l1);
+//
+//                        if (isCancelUpdate) return;
+//
+//                        if (l >= l1) {
+//                            installApk();
+//                        }
+//                        mbUiThreadHandler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (value <= PROGRESS_MAX)
+//                                    mProgress.setProgress(value);
+//                            }
+//                        });
+//                    }
+//                });
 
                 mProgress.setProgress(0);
             }

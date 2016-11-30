@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
 import com.wang17.religiouscalendar.emnu.MDrelation;
 import com.wang17.religiouscalendar.emnu.MDtype;
@@ -513,5 +514,17 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private void snackbar(String message) {
         RelativeLayout root = (RelativeLayout) findViewById(R.id.layout_setting_root);
         Snackbar.make(root, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
     }
 }
