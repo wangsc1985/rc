@@ -7,8 +7,8 @@ android {
         applicationId "com.wang17.religiouscalendar"
         minSdkVersion 11
         targetSdkVersion 24
-        versionCode 21
-        versionName '3.2.0'
+        versionCode 22
+        versionName '3.3.0'
     }
     buildTypes {
         release {

@@ -34,7 +34,7 @@ public class Religious {
     private TreeMap<DateTime, SolarTerm> solarTermTreeMap;
     private DataContext dataContext;
     private String zodiac1, zodiac2;
-    private Boolean swith_szr = false;
+    private Boolean swith_szr = false, swith_lzr = false, swith_gyz = false;
     private List<MemorialDay> memorialDays;
     private int year, month;
 
@@ -44,18 +44,21 @@ public class Religious {
         this.solarTermTreeMap = solarTermTreeMap;
         this.dataContext = new DataContext(context);
 
-        Setting setting = dataContext.getSetting("zodiac1");
+        Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
         zodiac1 = setting == null ? null : setting.getValue();
 
-        setting = dataContext.getSetting("zodiac2");
+        setting = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
         zodiac2 = setting == null ? null : setting.getValue();
 
-        setting = dataContext.getSetting("szr");
-        if (setting == null) {
-            dataContext.addSetting("szr", swith_szr + "");
-        } else {
-            swith_szr = Boolean.parseBoolean(setting.getValue());
-        }
+        setting = dataContext.getSetting(Setting.KEYS.szr.toString(), swith_szr + "");
+        swith_szr = Boolean.parseBoolean(setting.getValue());
+
+        setting = dataContext.getSetting(Setting.KEYS.lzr.toString(), swith_lzr + "");
+        swith_lzr = Boolean.parseBoolean(setting.getValue());
+
+        setting = dataContext.getSetting(Setting.KEYS.gyz.toString(), swith_gyz + "");
+        swith_gyz = Boolean.parseBoolean(setting.getValue());
+
 
         memorialDays = dataContext.getMemorialDays();
 
@@ -322,6 +325,16 @@ public class Religious {
             int chineseMonth = lunar.getMonth();
             int chineseDay = lunar.getDay();
 
+            //　大小月，大月30天，小月30天
+            int maxDay = lunar.getDay();
+            DateTime tempday = day.addDays(1);
+            Lunar tmpLunar = new Lunar(tempday);
+            while (tmpLunar.getMonth() == lunar.getMonth()) {
+                maxDay = lunar.getDay();
+                tempday = tempday.addDays(1);
+                tmpLunar = new Lunar(tempday);
+            }
+
 
             /// 犯之减寿五年。（农历正月十五、七月十五、十月十五，为上中下三元）
             if (chineseDay == 15 && chineseMonth == 1) {
@@ -345,14 +358,6 @@ public class Religious {
             /// 毁败日：大月十八日。小月十七日。犯之得病。
             int tChineseDay = lunar.getDay();
             if (tChineseDay == 17 || tChineseDay == 18) {
-                DateTime tempday = day.addDays(1);
-                Lunar tmpLunar = new Lunar(tempday);
-                int maxDay = lunar.getDay();
-                while (tmpLunar.getMonth() == lunar.getMonth()) {
-                    maxDay = lunar.getDay();
-                    tempday = tempday.addDays(1);
-                    tmpLunar = new Lunar(tempday);
-                }
                 if (maxDay == 30) {
                     if (tChineseDay == 18) {
                         this.AddReligiousDay(day, "毁败日。犯之得病。");
@@ -439,44 +444,175 @@ public class Religious {
                 this.AddReligiousDay(day, "阴错日。此阴不足之日。俱宜戒。");
             }
 
+            // 五毒月
+            if (chineseMonth == 5) {
+                this.AddRemark(day, "注：农历五月俗称五毒月，按此月宜全戒为是。");
+            }
+
+            // 农历戒期
+            if (lunarReligiousDays.containsKey(new LunarDate(chineseMonth, chineseDay))) {
+                this.AddReligiousDay(day, lunarReligiousDays.get(new LunarDate(chineseMonth, chineseDay)));
+            }
+
+            //region 个人相关斋戒日
 
             /// 祖先亡忌日。父母诞日、忌日。犯之皆减寿一年。
             for (MemorialDay memorialDay : memorialDays) {
                 if (chineseMonth == memorialDay.getLunarDate().getMonth() && chineseDay == memorialDay.getLunarDate().getDay())
                     this.AddReligiousDay(day, memorialDay.getRelation().toString() + memorialDay.getType() + "。犯之减寿一年。");
             }
-
-            /// 己身夫妇本命诞日。犯之皆减寿。
-            //// 太岁日。犯之皆减寿一年。
+            // 太岁日。犯之皆减寿一年。
             if (!_String.IsNullOrEmpty(this.zodiac1) && this.ZodiacToDizhi(this.zodiac1).equals(ganzhi.getDiZhiDay())) {
                 this.AddReligiousDay(day, "本人太岁日。犯之减寿一年。");
             }
+            /// 己身夫妇本命诞日。犯之皆减寿。
             if (!_String.IsNullOrEmpty(this.zodiac2) && this.ZodiacToDizhi(this.zodiac2).equals(ganzhi.getDiZhiDay())) {
                 this.AddReligiousDay(day, "配偶太岁日。犯之减寿一年。");
             }
 
-//            // 自定义斋日
+            //endregion
 
-            /// 农历戒期
-            if (lunarReligiousDays.containsKey(new LunarDate(chineseMonth, chineseDay))) {
-                this.AddReligiousDay(day, lunarReligiousDays.get(new LunarDate(chineseMonth, chineseDay)));
-            }
+            //region 佛教斋戒日
 
-            if (swith_szr) {
-                if (chineseDay == 1 || chineseDay == 8 || chineseDay == 14 || chineseDay == 15 || chineseDay == 18
-                        || chineseDay == 23 || chineseDay == 24 || chineseDay == 28 || chineseDay == 29 || chineseDay == 30) {
-                    this.AddReligiousDay(day, "十斋日");
+            // 六斋日（每月）初八日、十四日、十五日、廿三日、廿九日、三十日（月小从廿八日起）
+            if (swith_lzr) {
+                if (maxDay == 30) {
+                    if (chineseDay == 8 || chineseDay == 14 || chineseDay == 15 || chineseDay == 23 || chineseDay == 29 || chineseDay == 30) {
+                        this.AddReligiousDay(day, "六斋日");
+                    }
+                } else {
+                    if (chineseDay == 8 || chineseDay == 14 || chineseDay == 15 || chineseDay == 23 || chineseDay == 28 || chineseDay == 29) {
+                        this.AddReligiousDay(day, "六斋日");
+                    }
                 }
             }
 
-//            // 标记当月没有戒期的日子
-//            if (!religiousDays.containsKey(day)) {
-//                _calendar.AddUnReligiousDay(day);
-//            }
-
-            if (chineseMonth == 5) {
-                this.AddRemark(day, "注：农历五月俗称五毒月，按此月宜全戒为是。");
+            // 十斋日（每月）初一日、初八日、十四日、十五日、十八日、廿三日、廿四日、廿八日、廿九日、三十日（月小从廿七日起）
+            if (swith_szr) {
+                if (maxDay == 30) {
+                    if (chineseDay == 1 || chineseDay == 8 || chineseDay == 14 || chineseDay == 15 || chineseDay == 18
+                            || chineseDay == 23 || chineseDay == 24 || chineseDay == 28 || chineseDay == 29 || chineseDay == 30) {
+                        this.AddReligiousDay(day, "十斋日");
+                    }
+                } else {
+                    if (chineseDay == 1 || chineseDay == 8 || chineseDay == 14 || chineseDay == 15 || chineseDay == 18
+                            || chineseDay == 23 || chineseDay == 24 || chineseDay == 27 || chineseDay == 28 || chineseDay == 29) {
+                        this.AddReligiousDay(day, "十斋日");
+                    }
+                }
             }
+
+            // 观音斋：（正月）初八日，（二月）初七日、初九日、十九日，（三月）初三日、初六日、十三日，
+            // （四月）廿二日，（五月）初三日、十七日，（六月）十六日、十八日、十九日、廿三日，
+            // （七月）十三日，（八月）十六日，（九月）十九日、廿三日，（十月）初二日，（十一月）十九日、廿四日，（十二月）廿五日。
+            if (swith_gyz) {
+                boolean ggg = false;
+                switch (chineseMonth) {
+                    case 1:
+                        if (chineseDay == 8)
+                            ggg = true;
+                        break;
+                    case 2:
+                        switch (chineseDay) {
+                            case 7:
+                                ggg = true;
+                                break;
+                            case 9:
+                                ggg = true;
+                                break;
+                            case 19:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 3:
+                        switch (chineseDay) {
+                            case 3:
+                                ggg = true;
+                                break;
+                            case 6:
+                                ggg = true;
+                                break;
+                            case 13:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 4:
+                        if (chineseDay == 22)
+                            ggg = true;
+                        break;
+                    case 5:
+                        switch (chineseDay) {
+                            case 3:
+                                ggg = true;
+                                break;
+                            case 17:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 6:
+                        switch (chineseDay) {
+                            case 16:
+                                ggg = true;
+                                break;
+                            case 18:
+                                ggg = true;
+                                break;
+                            case 19:
+                                ggg = true;
+                                break;
+                            case 23:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 7:
+                        if (chineseDay == 13)
+                            ggg = true;
+                        break;
+                    case 8:
+                        if (chineseDay == 16)
+                            ggg = true;
+                        break;
+                    case 9:
+                        switch (chineseDay) {
+                            case 19:
+                                ggg = true;
+                                break;
+                            case 23:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 10:
+                        if (chineseDay == 2)
+                            ggg = true;
+                        break;
+                    case 11:
+                        switch (chineseDay) {
+                            case 19:
+                                ggg = true;
+                                break;
+                            case 24:
+                                ggg = true;
+                                break;
+                        }
+                        break;
+                    case 12:
+                        if (chineseDay == 25)
+                            ggg = true;
+                        break;
+                }
+
+                if (ggg) {
+                    this.AddReligiousDay(day, "观音斋");
+                }
+            }
+
+            //endregion
+
             //
             day = day.addDays(1);
         }

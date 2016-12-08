@@ -21,8 +21,20 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="六斋日"
+            android:id="@+id/checkBox_lzr" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="十斋日"
             android:id="@+id/checkBox_szr" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="观音斋"
+            android:id="@+id/checkBox_gyz" />
 
     </LinearLayout>
 

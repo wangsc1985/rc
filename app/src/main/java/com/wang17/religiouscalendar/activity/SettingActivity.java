@@ -46,7 +46,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration, spinner_banner, spinner_bannerPosition;
     private Button btn_addMD;
-    private CheckBox checkBox_szr;
+    private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
     private TextView textView_guide, textView_update;
 
     public static boolean calenderChanged, bannerChanged, bannerPositionChanged;
@@ -78,6 +78,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             textView_update = (TextView) findViewById(R.id.textView_update);
 
             checkBox_szr = (CheckBox) findViewById(R.id.checkBox_szr);
+            checkBox_lzr = (CheckBox) findViewById(R.id.checkBox_lzr);
+            checkBox_gyz = (CheckBox) findViewById(R.id.checkBox_gyz);
 
             this.initializeFields();
             this.initializeEvents();
@@ -96,13 +98,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 //        if (UpdateManager.isUpdate())
 //            textView_update.setVisibility(View.VISIBLE);
 
-        Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString());
-        if (szr == null) {
-            dataContext.addSetting(Setting.KEYS.szr.toString(), false + "");
-            checkBox_szr.setChecked(false);
-        } else {
-            checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
-        }
+        Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString(), false + "");
+        checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
+        Setting lzr = dataContext.getSetting(Setting.KEYS.lzr.toString(), false + "");
+        checkBox_lzr.setChecked(Boolean.parseBoolean(lzr.getValue()));
+        Setting gyz = dataContext.getSetting(Setting.KEYS.gyz.toString(), false + "");
+        checkBox_gyz.setChecked(Boolean.parseBoolean(gyz.getValue()));
 
         this.initializeZodiac(spinner_zodiac1);
         this.initializeZodiac(spinner_zodiac2);
@@ -228,7 +229,21 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         checkBox_szr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dataContext.editSetting("szr", isChecked + "");
+                dataContext.editSetting(Setting.KEYS.szr.toString(), isChecked + "");
+                calenderChanged = true;
+            }
+        });
+        checkBox_lzr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                dataContext.editSetting(Setting.KEYS.lzr.toString(), isChecked + "");
+                calenderChanged = true;
+            }
+        });
+        checkBox_gyz.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                dataContext.editSetting(Setting.KEYS.gyz.toString(), isChecked + "");
                 calenderChanged = true;
             }
         });
