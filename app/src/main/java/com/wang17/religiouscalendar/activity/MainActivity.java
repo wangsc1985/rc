@@ -407,6 +407,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (calendarItem.getNongLi().getDay() == 1) {
                         ci_tvNongLi.setText(calendarItem.getNongLi().getMonthStr());
                         ci_tvNongLi.setTextColor(Color.BLACK);
+                        ci_tvNongLi.getPaint().setFakeBoldText(true);
                     } else {
                         ci_tvNongLi.setText(calendarItem.getNongLi().getDayStr());
                     }
@@ -423,17 +424,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         ci_cvIsSelected.setVisibility(View.VISIBLE);
                         preSelectedPosition = position;
                     }
-                    // 今天非戒期
-                    if (calendarItem.getReligious() == null) {
-                        ci_cvIsUnReligious.setVisibility(View.VISIBLE);
-                    }
                     // 显示节气
                     for (Map.Entry<DateTime, SolarTerm> entry : currentMonthSolarTerms.entrySet()) {
                         today.set(entry.getKey().getYear(), entry.getKey().getMonth(), entry.getKey().get(DateTime.DAY_OF_MONTH), 0, 0, 0);
                         if (CalendarHelper.isSameDate(today, calendarItem.getYangLi())) {
                             ci_tvNongLi.setText(entry.getValue().toString());
+//                            ci_tvNongLi.setTextColor(Color.CYAN);
                             break;
                         }
+                    }
+                    // 今天非戒期
+                    if (calendarItem.getReligious() == null) {
+                        ci_cvIsUnReligious.setVisibility(View.VISIBLE);
+                    } else if(findReligiousKeyWord(calendarItem.getReligious())==1){
+                        ci_tvNongLi.setTextColor(getResources().getColor(R.color.month_text_color));
                     }
                 } else {
                     ci_tvYangLi.setText("");
@@ -444,6 +448,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             return convertView;
         }
+    }
+
+    private int findReligiousKeyWord(String religious) {
+        if (religious.contains("俱亡")
+                || religious.contains("奇祸")
+                || religious.contains("大祸")
+                || religious.contains("促寿")
+                || religious.contains("恶疾")
+                || religious.contains("大凶")
+                || religious.contains("绝嗣")
+                || religious.contains("死")
+                || religious.contains("危疾")
+                || religious.contains("水厄")
+                || religious.contains("贫夭")
+                || religious.contains("暴亡")
+                || religious.contains("失瘏夭胎")
+                || religious.contains("损寿子带疾")
+                || religious.contains("阴错日")
+                || religious.contains("十恶大败日")
+                || religious.contains("一年内亡")
+                || religious.contains("必得急疾")
+                || religious.contains("生子五官四肢不全。父母有灾")
+                || religious.contains("减寿五年")) {
+            return 1;
+        }
+        return 0;
     }
 
     /**
@@ -515,6 +545,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     tv.setText(str);
                     tv.getPaint().setFakeBoldText(true);
                     tv.setTypeface(fontHWZS);
+                    if(findReligiousKeyWord(str)==1){
+                        tv.setTextColor(getResources().getColor(R.color.month_text_color));
+                    }
 
                     layout_religious.addView(view);
                 }
