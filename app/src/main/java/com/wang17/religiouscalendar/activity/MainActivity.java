@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome;
     private DrawerLayout drawer;
-    private LinearLayout layout_upper_banner, layout_under_banner, layout_leftMenu, layout_setting, layout_religious;
+    private LinearLayout layout_upper_banner, layout_under_banner, layout_religious;
     private View include_banner;
     private GridView userCalender;
     // 类变量
@@ -133,6 +133,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+
+
+            DataContext context = new DataContext(this);
+            int softVersion = 13;
+            int currentVersionCode = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
+            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode.toString(),0).getValue());
+            if(softVersion>latestVersionCode){
+                GuideActivity.btnText="立即体验";
+                startActivity(new Intent(this,GuideActivity.class));
+                context.editSetting(Setting.KEYS.latestVersionCode.toString(),softVersion);
+            }
+
+
+
             MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);
             xxxTimeMillis = System.currentTimeMillis();
             uiHandler = new Handler();
@@ -269,8 +283,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fontHWZS = Typeface.createFromAsset(mgr, "fonts/STZHONGS.TTF");
             fontGF = Typeface.createFromAsset(mgr, "fonts/GONGFANG.ttf");
 
-            TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
-            textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
             TextView textViewContent = (TextView) findViewById(R.id.textView_Content);
             textViewContent.setLineSpacing(1f, 1.2f);
             textViewContent.setTypeface(fontHWZS);
@@ -359,8 +371,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView mTextView = new TextView(getApplicationContext());
             mTextView.setText(header[position]);
             mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-            mTextView.setTextSize(12);
+            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
             mTextView.getPaint().setFakeBoldText(true);
+            mTextView.setTypeface(Typeface.MONOSPACE);
 //            mTextView.setTextColor(getResources().getColor(R.color.dim_foreground_material_dark));
             mTextView.setTextColor(Color.parseColor("#000000"));
             mTextView.setWidth(60);
@@ -458,7 +471,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || religious.contains("恶疾")
                 || religious.contains("大凶")
                 || religious.contains("绝嗣")
-                || religious.contains("死")
+                || religious.contains("男死")
+                || religious.contains("女死")
+                || religious.contains("血死")
+                || religious.contains("一年内死")
                 || religious.contains("危疾")
                 || religious.contains("水厄")
                 || religious.contains("贫夭")

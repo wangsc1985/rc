@@ -26,7 +26,7 @@
             android:layout_gravity="center_horizontal"
             android:text="27"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#ff706d72"
+            android:textColor="@color/calendar_yl_color"
             android:textSize="20dp"
             android:typeface="monospace"
             android:textStyle="bold"
@@ -40,9 +40,11 @@
             android:layout_marginBottom="3dp"
             android:text="十六"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/calendar_nl_color"
             android:textSize="10dp"
-            android:layout_marginTop="-2dp" />
+            android:layout_marginTop="-2dp"
+            android:fontFamily="monospace"
+            android:typeface="monospace" />
     </LinearLayout>
 
     <ImageView

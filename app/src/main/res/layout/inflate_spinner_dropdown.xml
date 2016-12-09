@@ -9,4 +9,6 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:padding="5dp"
-    android:background="#ffffff" />
+    android:background="#ffffff"
+    android:typeface="monospace"
+    android:fontFamily="monospace" />

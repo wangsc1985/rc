@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:text="5、主页横幅："
         android:textColor="#000000"
-        android:textSize="14dp" />
+        android:textSize="14dp"
+        android:typeface="monospace" />
 
     <Spinner
         android:id="@+id/spinner_banner"

@@ -51,7 +51,8 @@
                 android:id="@+id/textView_selected_day"
                 android:textSize="18dp"
                 android:textColor="@color/button_material_dark"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:typeface="monospace" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,7 +62,8 @@
                 android:id="@+id/tvGanZhi"
                 android:layout_gravity="center_horizontal"
                 android:textSize="13dp"
-                android:textColor="@color/button_material_dark" />
+                android:textColor="@color/button_material_dark"
+                android:typeface="monospace" />
         </LinearLayout>
 
         <FrameLayout

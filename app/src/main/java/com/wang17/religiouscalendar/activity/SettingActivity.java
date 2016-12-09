@@ -3,6 +3,7 @@ package com.wang17.religiouscalendar.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -90,65 +91,72 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     }
 
     private void initializeFields() {
-        dataContext = new DataContext(SettingActivity.this);
-        calenderChanged = false;
-        bannerChanged = false;
-        bannerPositionChanged = false;
+        try {
+            dataContext = new DataContext(SettingActivity.this);
+            calenderChanged = false;
+            bannerChanged = false;
+            bannerPositionChanged = false;
 
 //        if (UpdateManager.isUpdate())
 //            textView_update.setVisibility(View.VISIBLE);
 
-        Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString(), false + "");
-        checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
-        Setting lzr = dataContext.getSetting(Setting.KEYS.lzr.toString(), false + "");
-        checkBox_lzr.setChecked(Boolean.parseBoolean(lzr.getValue()));
-        Setting gyz = dataContext.getSetting(Setting.KEYS.gyz.toString(), false + "");
-        checkBox_gyz.setChecked(Boolean.parseBoolean(gyz.getValue()));
+            TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
+            textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 
-        this.initializeZodiac(spinner_zodiac1);
-        this.initializeZodiac(spinner_zodiac2);
-        Setting zodiac1 = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
-        Setting zodiac2 = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
-        if (zodiac1 != null) {
-            spinner_zodiac1.setSelection(Zodiac.fromString(zodiac1.getValue()).toInt());
+            Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString(), false + "");
+            checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
+            Setting lzr = dataContext.getSetting(Setting.KEYS.lzr.toString(), false + "");
+            checkBox_lzr.setChecked(Boolean.parseBoolean(lzr.getValue()));
+            Setting gyz = dataContext.getSetting(Setting.KEYS.gyz.toString(), false + "");
+            checkBox_gyz.setChecked(Boolean.parseBoolean(gyz.getValue()));
+
+            this.initializeZodiac(spinner_zodiac1);
+            this.initializeZodiac(spinner_zodiac2);
+            Setting zodiac1 = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
+            Setting zodiac2 = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
+            if (zodiac1 != null) {
+                spinner_zodiac1.setSelection(Zodiac.fromString(zodiac1.getValue()).toInt());
+            }
+            if (zodiac2 != null) {
+                spinner_zodiac2.setSelection(Zodiac.fromString(zodiac2.getValue()).toInt());
+            }
+
+            List<String> list = new ArrayList<String>();
+            for (int i = 0; i < MDtype.count(); i++) {
+                list.add(MDtype.fromInt(i).toString());
+            }
+            this.fillSpinner(spinner_mdtype, list);
+            List<String> list2 = new ArrayList<String>();
+            for (int i = 0; i < MDrelation.count(); i++) {
+                list2.add(MDrelation.fromInt(i).toString());
+            }
+            this.fillSpinner(spinner_mdrelation, list2);
+
+            this.initializeLunarMonth(spinner_month);
+            this.initializeLunarDay(spinner_day);
+
+            this.initializeWelcome();
+            spinner_welcome.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome.toString(), 0).getValue()));
+
+            this.initializeDuration();
+            spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()));
+
+            this.initializeBanner();
+            spinner_banner.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), 0).getValue()));
+
+            this.initializeBannerPosition();
+            spinner_bannerPosition.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString(), 0).getValue()));
+
+            List<MemorialDay> memorialDays = dataContext.getMemorialDays();
+
+            mdListItems = new ArrayList<HashMap<String, String>>();
+            for (MemorialDay md : memorialDays) {
+                this.addListItem(md);
+            }
+            refreshMdList();
+        } catch (PackageManager.NameNotFoundException e) {
+            _Helper.printExceptionSycn(this, uiHandler, e);
         }
-        if (zodiac2 != null) {
-            spinner_zodiac2.setSelection(Zodiac.fromString(zodiac2.getValue()).toInt());
-        }
-
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < MDtype.count(); i++) {
-            list.add(MDtype.fromInt(i).toString());
-        }
-        this.fillSpinner(spinner_mdtype, list);
-        List<String> list2 = new ArrayList<String>();
-        for (int i = 0; i < MDrelation.count(); i++) {
-            list2.add(MDrelation.fromInt(i).toString());
-        }
-        this.fillSpinner(spinner_mdrelation, list2);
-
-        this.initializeLunarMonth(spinner_month);
-        this.initializeLunarDay(spinner_day);
-
-        this.initializeWelcome();
-        spinner_welcome.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome.toString(), 0).getValue()));
-
-        this.initializeDuration();
-        spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()));
-
-        this.initializeBanner();
-        spinner_banner.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), 0).getValue()));
-
-        this.initializeBannerPosition();
-        spinner_bannerPosition.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString(), 0).getValue()));
-
-        List<MemorialDay> memorialDays = dataContext.getMemorialDays();
-
-        mdListItems = new ArrayList<HashMap<String, String>>();
-        for (MemorialDay md : memorialDays) {
-            this.addListItem(md);
-        }
-        refreshMdList();
 //        mdListAdapter = new MDlistdAdapter();
 //        listViewMD.setAdapter(mdListAdapter);
     }

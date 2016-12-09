@@ -5,4 +5,8 @@
     <color name="month_text_color">#b90404</color>
     <color name="colorAccent">#ff4081</color>
     <color name="black_overlay">#66000000</color>
+    <color name="dot_light_color">#061a2e</color>
+    <color name="dot_dark_color">#b90404</color>
+    <color name="calendar_yl_color">#ff706d72</color>
+    <color name="calendar_nl_color">#aaa</color>
 </resources>
