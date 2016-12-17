@@ -138,13 +138,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DataContext context = new DataContext(this);
             int softVersion = 13;
             int currentVersionCode = this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
-            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode.toString(),0).getValue());
-            if(softVersion>latestVersionCode){
-                GuideActivity.btnText="立即体验";
-                startActivity(new Intent(this,GuideActivity.class));
-                context.editSetting(Setting.KEYS.latestVersionCode.toString(),softVersion);
+            int latestVersionCode = Integer.parseInt(context.getSetting(Setting.KEYS.latestVersionCode.toString(), 0).getValue());
+            if (softVersion > latestVersionCode) {
+                GuideActivity.btnText = "立即体验";
+                startActivity(new Intent(this, GuideActivity.class));
+                context.editSetting(Setting.KEYS.latestVersionCode.toString(), softVersion);
             }
-
 
 
             MainActivityPermissionsDispatcher.showUMAnalyticsWithCheck(this);
@@ -371,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             TextView mTextView = new TextView(getApplicationContext());
             mTextView.setText(header[position]);
             mTextView.setGravity(Gravity.CENTER_HORIZONTAL);
-            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+            mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
             mTextView.getPaint().setFakeBoldText(true);
             mTextView.setTypeface(Typeface.MONOSPACE);
 //            mTextView.setTextColor(getResources().getColor(R.color.dim_foreground_material_dark));
@@ -449,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     // 今天非戒期
                     if (calendarItem.getReligious() == null) {
                         ci_cvIsUnReligious.setVisibility(View.VISIBLE);
-                    } else if(findReligiousKeyWord(calendarItem.getReligious())==1){
+                    } else if (findReligiousKeyWord(calendarItem.getReligious()) == 1) {
                         ci_tvNongLi.setTextColor(getResources().getColor(R.color.month_text_color));
                     }
                 } else {
@@ -561,7 +560,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     tv.setText(str);
                     tv.getPaint().setFakeBoldText(true);
                     tv.setTypeface(fontHWZS);
-                    if(findReligiousKeyWord(str)==1){
+                    if (findReligiousKeyWord(str) == 1) {
                         tv.setTextColor(getResources().getColor(R.color.month_text_color));
                     }
 
