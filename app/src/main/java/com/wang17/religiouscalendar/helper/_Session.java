@@ -23,6 +23,8 @@ public class _Session extends AppCompatActivity {
         welcomes.add(new PicNameRes(R.drawable.welcome03, "观世音菩萨三"));
         welcomes.add(new PicNameRes(R.drawable.welcome04, "观世音菩萨四"));
         welcomes.add(new PicNameRes(R.drawable.welcome05, "观世音菩萨五"));
+        welcomes.add(new PicNameRes(R.mipmap.amtf, "南无阿弥陀佛一"));
+        welcomes.add(new PicNameRes(R.drawable.amtf1, "南无阿弥陀佛二"));
 
         banners = new ArrayList<PicNameRes>();
         banners.add(new PicNameRes(R.mipmap.banner01, "释迦牟尼佛"));
