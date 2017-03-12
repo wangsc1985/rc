@@ -24,8 +24,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -36,6 +38,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -76,7 +79,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener ,View.OnTouchListener{
 
     // 视图变量
     private TextView textView_ganzhi, textView_nongli, textView_fo, button_today;
@@ -84,9 +87,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome;
     private DrawerLayout drawer;
-    private LinearLayout layout_upper_banner, layout_under_banner, layout_religious;
+    private LinearLayout layout_upper_banner, layout_religious;
     private View include_banner;
     private GridView userCalender;
+    private PopupWindow mPopWindow;
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Map<DateTime, SolarTerm> currentMonthSolarTerms;
     private HashMap<DateTime, String> religiousDays, remarks;
     private Handler uiHandler;
+    private float locationX,locationY;
 
     @Override
     protected void onPause() {
@@ -242,33 +247,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dataContext.editSetting(Setting.KEYS.banner.toString(), itemPosition);
             }
 
-            layout_upper_banner = (LinearLayout) findViewById(R.id.layout_upper_banner);
-            layout_under_banner = (LinearLayout) findViewById(R.id.layout_under_banner);
+//            layout_upper_banner = (LinearLayout) findViewById(R.id.layout_upper_banner);
             // 加载include_main_banner
-            include_banner = getLayoutInflater().inflate(R.layout.include_main_banner, null);
-            imageView_banner = (ImageView) include_banner.findViewById(R.id.imageView_banner);
+//            include_banner = getLayoutInflater().inflate(R.layout.include_main_banner, null);
+            imageView_banner = (ImageView) findViewById(R.id.imageView_banner);
             imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-            imageView_banner.setOnLongClickListener(new View.OnLongClickListener() {//2130903043
+            imageView_banner.setOnClickListener(new View.OnClickListener() {//2130903043
                 @Override
-                public boolean onLongClick(View v) {
-                    try {
-                        int position = 0;
-                        position = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), position).getValue()) + 1;
-                        if (position >= _Session.banners.size()) {
-                            position = 0;
-                        }
-                        dataContext.editSetting(Setting.KEYS.banner.toString(), position);
-                        imageView_banner.setImageResource(_Session.banners.get(position).getResId());
-                    } catch (Exception ex) {
-                        _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
-                    }
-                    return true;
+                public void onClick(View v) {
+//                    try {
+//                        int position = 0;
+//                        position = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), position).getValue()) + 1;
+//                        if (position >= _Session.banners.size()) {
+//                            position = 0;
+//                        }
+//                        dataContext.editSetting(Setting.KEYS.banner.toString(), position);
+//                        imageView_banner.setImageResource(_Session.banners.get(position).getResId());
+//                    } catch (Exception ex) {
+//                        _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+//                    }
+                    showPopupWindow();
                 }
             });
-
-            itemPosition = 0;
-            itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString(), itemPosition).getValue());
-            setBannerPosition(itemPosition);
 
             imageButton_leftMenu = (ImageButton) findViewById(R.id.imageButton_leftMenu);
             imageButton_settting = (ImageButton) findViewById(R.id.imageButton_setting);
@@ -342,6 +342,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } catch (Exception ex) {
             _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
+    }
+
+    private void showPopupWindow() {
+        //设置contentView
+        View contentView = LayoutInflater.from(MainActivity.this).inflate(R.layout.popup_window, null);
+        mPopWindow = new PopupWindow(contentView,
+                DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT, true);
+        mPopWindow.setContentView(contentView);
+        //设置各个控件的点击响应
+        TextView tv0 = (TextView)contentView.findViewById(R.id.item00);
+        TextView tv1 = (TextView)contentView.findViewById(R.id.item01);
+        TextView tv2 = (TextView)contentView.findViewById(R.id.item02);
+        TextView tv3 = (TextView)contentView.findViewById(R.id.item03);
+        TextView tv4 = (TextView)contentView.findViewById(R.id.item04);
+        tv0.setOnClickListener(this);
+        tv1.setOnClickListener(this);
+        tv2.setOnClickListener(this);
+        tv3.setOnClickListener(this);
+        tv4.setOnClickListener(this);
+        //显示PopupWindow
+//        View rootview = (View)findViewById(R.id.layout_upper_banner);
+//        mPopWindow.showAtLocation(rootview,);
+
+        View rootview = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_main, null);
+        mPopWindow.showAtLocation(rootview, Gravity.RIGHT|Gravity.TOP, 0, 0);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        int id = v.getId();
+        try {
+            switch (id) {
+                case R.id.item00: {
+                    dataContext.editSetting(Setting.KEYS.banner.toString(), 0);
+                    imageView_banner.setImageResource(_Session.banners.get(0).getResId());
+                }
+                break;
+                case R.id.item01: {
+                    dataContext.editSetting(Setting.KEYS.banner.toString(), 1);
+                    imageView_banner.setImageResource(_Session.banners.get(1).getResId());
+                }
+                break;
+                case R.id.item02: {
+                    dataContext.editSetting(Setting.KEYS.banner.toString(), 2);
+                    imageView_banner.setImageResource(_Session.banners.get(2).getResId());
+                }
+                break;
+                case R.id.item03: {
+                    dataContext.editSetting(Setting.KEYS.banner.toString(), 3);
+                    imageView_banner.setImageResource(_Session.banners.get(3).getResId());
+                }
+                break;
+                case R.id.item04: {
+                    dataContext.editSetting(Setting.KEYS.banner.toString(), 4);
+                    imageView_banner.setImageResource(_Session.banners.get(4).getResId());
+                }
+                break;
+            }
+            mPopWindow.dismiss();
+        } catch (Exception ex) {
+            _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        locationX = event.getX();
+        locationY = event.getY();
+        return true;
     }
 
     /**
@@ -1135,14 +1206,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (SettingActivity.calenderChanged) {
                     refreshCalendarWithDialog("配置已更改，正在重新加载...");
                 }
-                if (SettingActivity.bannerChanged) {
-                    int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString()).getValue());
-                    imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
-                }
-                if (SettingActivity.bannerPositionChanged) {
-                    int itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString()).getValue());
-                    setBannerPosition(itemPosition);
-                }
             }
         } catch (NumberFormatException e) {
             _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
@@ -1150,26 +1213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void setBannerPosition(int itemPosition) {
-        try {
-            switch (itemPosition) {
-                case 0:
-                    layout_under_banner.removeAllViews();
-                    layout_upper_banner.addView(include_banner);
-                    break;
-                case 1:
-                    layout_upper_banner.removeAllViews();
-                    layout_under_banner.addView(include_banner);
-                    break;
-                case 2:
-                    layout_under_banner.removeAllViews();
-                    layout_upper_banner.removeAllViews();
-                    break;
-            }
-        } catch (Exception e) {
-            _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
-        }
-    }
 
     //region 友盟统计权限
     @NeedsPermission({Manifest.permission.INTERNET,

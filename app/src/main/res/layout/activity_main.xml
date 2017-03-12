@@ -40,6 +40,10 @@
                     <!--</LinearLayout>-->
 
                     <include
+                        android:id="@+id/banner"
+                        layout="@layout/include_main_banner" />
+
+                    <include
                         android:id="@+id/calendar"
                         layout="@layout/include_main_user_calendar" />
 
@@ -48,12 +52,6 @@
                         layout="@layout/include_main_menu" />
                     <!--<include android:id="banner_under_part"  layout="@layout/include_main_banner"/>-->
 
-
-                    <LinearLayout
-                        android:id="@+id/layout_under_banner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"></LinearLayout>
 
                     <include
                         android:id="@+id/info"

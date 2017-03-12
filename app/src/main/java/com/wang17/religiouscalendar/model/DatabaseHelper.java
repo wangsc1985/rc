@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     private static final String DATABASE_NAME = "religiouscalendar.db";
 
     public DatabaseHelper(Context context) {
@@ -34,6 +34,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 更改数据库版本的操作
         if (oldVersion == 1 && newVersion == 2) {
+
+            db.execSQL("create table if not exists runLog("
+                    + "id TEXT PRIMARY KEY,"
+                    + "runTime LONG,"
+                    + "tag TEXT,"
+                    + "item TEXT,"
+                    + "message TEXT)");
+            db.execSQL("create table if not exists sexualDay("
+                    + "id TEXT PRIMARY KEY,"
+                    + "dateTime LONG,"
+                    + "item TEXT,"
+                    + "summary TEXT)");
         }
     }
 

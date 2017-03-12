@@ -45,12 +45,12 @@ import java.util.UUID;
 
 public class SettingActivity extends AppCompatActivity implements OnActionFragmentBackListener {
 
-    private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration, spinner_banner, spinner_bannerPosition;
+    private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration;
     private Button btn_addMD;
     private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
     private TextView textView_guide, textView_update;
 
-    public static boolean calenderChanged, bannerChanged, bannerPositionChanged;
+    public static boolean calenderChanged;
     private DataContext dataContext;
     private MDlistdAdapter mdListAdapter;
     private List<HashMap<String, String>> mdListItems;
@@ -71,8 +71,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             spinner_day = (Spinner) findViewById(R.id.spinner_day);
             spinner_welcome = (Spinner) findViewById(R.id.spinner_welcome);
             spinner_duration = (Spinner) findViewById(R.id.spinner_duration);
-            spinner_banner = (Spinner) findViewById(R.id.spinner_banner);
-            spinner_bannerPosition = (Spinner) findViewById(R.id.spinner_bannerPositio);
 
             btn_addMD = (Button) findViewById(R.id.button_addMD);
             textView_guide = (TextView) findViewById(R.id.textView_guide);
@@ -94,8 +92,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         try {
             dataContext = new DataContext(SettingActivity.this);
             calenderChanged = false;
-            bannerChanged = false;
-            bannerPositionChanged = false;
 
 //        if (UpdateManager.isUpdate())
 //            textView_update.setVisibility(View.VISIBLE);
@@ -140,12 +136,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
             this.initializeDuration();
             spinner_duration.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1).getValue()));
-
-            this.initializeBanner();
-            spinner_banner.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), 0).getValue()));
-
-            this.initializeBannerPosition();
-            spinner_bannerPosition.setSelection(Integer.parseInt(dataContext.getSetting(Setting.KEYS.bannerPositoin.toString(), 0).getValue()));
 
             List<MemorialDay> memorialDays = dataContext.getMemorialDays();
 
@@ -345,58 +335,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
             }
         });
-        spinner_banner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                     @Override
-                                                     public void onItemSelected(AdapterView<?> parent, View view, int position,
-                                                                                long id) {
-
-                                                         Setting setting = dataContext.getSetting(Setting.KEYS.banner.toString());
-                                                         if (setting != null) {
-                                                             if (!setting.getValue().equals(spinner_banner.getSelectedItemPosition() + "")) {
-                                                                 bannerChanged = true;
-                                                                 dataContext.editSetting(Setting.KEYS.banner.toString(), spinner_banner.getSelectedItemPosition() + "");
-                                                                 snackbarSaved();
-                                                             }
-                                                         } else {
-                                                             if (spinner_banner.getSelectedItemPosition() != 0) {
-                                                                 bannerChanged = true;
-                                                                 dataContext.addSetting(Setting.KEYS.banner.toString(), spinner_banner.getSelectedItemPosition() + "");
-                                                                 snackbarSaved();
-                                                             }
-                                                         }
-                                                     }
-
-                                                     @Override
-                                                     public void onNothingSelected(AdapterView<?> parent) {
-
-                                                     }
-                                                 }
-
-        );
-        spinner_bannerPosition.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(Setting.KEYS.bannerPositoin.toString());
-                if (setting != null) {
-                    if (!setting.getValue().equals(spinner_bannerPosition.getSelectedItemPosition() + "")) {
-                        bannerPositionChanged = true;
-                        dataContext.editSetting(Setting.KEYS.bannerPositoin.toString(), spinner_bannerPosition.getSelectedItemPosition() + "");
-                        snackbarSaved();
-                    }
-                } else {
-                    if (spinner_bannerPosition.getSelectedItemPosition() != 0) {
-                        bannerPositionChanged = true;
-                        dataContext.addSetting(Setting.KEYS.bannerPositoin.toString(), spinner_bannerPosition.getSelectedItemPosition() + "");
-                        snackbarSaved();
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private void initializeDuration() {
@@ -408,22 +346,6 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         list.add("6秒");
         list.add("7秒");
         this.fillSpinner(spinner_duration, list);
-    }
-
-    private void initializeBannerPosition() {
-        List<String> list = new ArrayList<String>();
-        list.add("顶部显示");
-        list.add("下部显示");
-        list.add("不显示");
-        this.fillSpinner(spinner_bannerPosition, list);
-    }
-
-    private void initializeBanner() {
-        List<String> list = new ArrayList<String>();
-        for (int i = 0; i < _Session.banners.size(); i++) {
-            list.add(_Session.banners.get(i).getListItemString());
-        }
-        this.fillSpinner(spinner_banner, list);
     }
 
     private void initializeWelcome() {

@@ -1,100 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:id="@+id/layout_root"
+    android:layout_width="match_parent"
+    android:layout_height="47dp"
+    android:orientation="horizontal">
 
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:id="@+id/layout_data"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="4">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:text="开始："
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView12"
-                android:layout_weight="1"
-                android:fontFamily="monospace" />
-
-            <TextView
-                android:text="2016.03.23 18点"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView_start"
-                android:layout_weight="1"
-                android:textSize="14dp"
-                android:fontFamily="monospace" />
-        </LinearLayout>
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_weight="4"
+        android:background="#ffffff"
+        android:orientation="horizontal">
 
         <TextView
-            android:text="4天13小时"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
             android:id="@+id/textView_interval"
-            android:layout_weight="1"
-            android:textSize="20dp"
-            android:gravity="center" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="4天13小时"
+            android:textSize="16dp" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="false"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
-            android:paddingBottom="5dp"
             android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:visibility="gone">
+            android:paddingTop="3dp">
 
             <TextView
-                android:text="结束："
+                android:id="@+id/textView_startDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView13"
-                android:layout_weight="1"
-                android:fontFamily="monospace" />
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="monospace"
+                android:text="03月23日"
+                android:textSize="12dp" />
 
             <TextView
-                android:text="2016.03.27 20点"
+                android:id="@+id/textView_startTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_end"
-                android:layout_weight="1"
-                android:textSize="14dp"
-                android:fontFamily="monospace" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:fontFamily="monospace"
+                android:text="18:13"
+                android:textSize="12dp" />
+
         </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_operate"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <FrameLayout
+            android:id="@+id/layout_edit"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@color/b">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="编辑"
+                android:textColor="#ffffff"
+                android:textSize="12dp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_del"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="删除"
+                android:textColor="#ffffff"
+                android:textSize="12dp" />
+        </FrameLayout>
 
     </LinearLayout>
 
-    <ImageButton
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:id="@+id/imageButton_edit"
-        android:layout_weight="1"
-        android:src="@android:drawable/ic_menu_edit"
-        android:contentDescription="编辑"
-        android:background="@android:color/transparent" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:max="49"
+        android:progress="20"
+        android:textAlignment="viewEnd" />
 
-    <ImageButton
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@android:drawable/ic_menu_delete"
-        android:id="@+id/imageButton_del"
-        android:layout_weight="1"
-        android:contentDescription="删除"
-        android:background="@android:color/transparent" />
-</LinearLayout>
+</RelativeLayout>
