@@ -79,7 +79,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener ,View.OnTouchListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
 
     // 视图变量
     private TextView textView_ganzhi, textView_nongli, textView_fo, button_today;
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View include_banner;
     private GridView userCalender;
     private PopupWindow mPopWindow;
-    private LinearLayout layoutJinJi,layoutJyw,layoutRecord;
+    private LinearLayout layoutJinJi, layoutJyw, layoutRecord;
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Map<DateTime, SolarTerm> currentMonthSolarTerms;
     private HashMap<DateTime, String> religiousDays, remarks;
     private Handler uiHandler;
-    private float locationX,locationY;
+    private float locationX, locationY;
 
     @Override
     protected void onPause() {
@@ -241,27 +241,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initializeComponent() {
         try {
 
-            layoutRecord=(LinearLayout)findViewById(R.id.layout_record);
-            layoutJinJi = (LinearLayout)findViewById(R.id.layout_jinji);
-            layoutJyw=(LinearLayout)findViewById(R.id.layout_jyw);
+            layoutRecord = (LinearLayout) findViewById(R.id.layout_record);
+            layoutJinJi = (LinearLayout) findViewById(R.id.layout_jinji);
+            layoutJyw = (LinearLayout) findViewById(R.id.layout_jyw);
             layoutRecord.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // TODO: 2017/3/12 进入记录列表
                 }
             });
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // TODO: 2017/3/12 查看天地人忌
                 }
             });
             layoutJyw.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    // TODO: 2017/3/12 查看戒淫文
                 }
             });
+
+            // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
 
             //
             int itemPosition = 0;
@@ -375,11 +377,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DrawerLayout.LayoutParams.WRAP_CONTENT, DrawerLayout.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setContentView(contentView);
         //设置各个控件的点击响应
-        TextView tv0 = (TextView)contentView.findViewById(R.id.item00);
-        TextView tv1 = (TextView)contentView.findViewById(R.id.item01);
-        TextView tv2 = (TextView)contentView.findViewById(R.id.item02);
-        TextView tv3 = (TextView)contentView.findViewById(R.id.item03);
-        TextView tv4 = (TextView)contentView.findViewById(R.id.item04);
+        TextView tv0 = (TextView) contentView.findViewById(R.id.item00);
+        TextView tv1 = (TextView) contentView.findViewById(R.id.item01);
+        TextView tv2 = (TextView) contentView.findViewById(R.id.item02);
+        TextView tv3 = (TextView) contentView.findViewById(R.id.item03);
+        TextView tv4 = (TextView) contentView.findViewById(R.id.item04);
         tv0.setOnClickListener(this);
         tv1.setOnClickListener(this);
         tv2.setOnClickListener(this);
@@ -390,7 +392,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        mPopWindow.showAtLocation(rootview,);
 
         View rootview = LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_main, null);
-        mPopWindow.showAtLocation(rootview, Gravity.RIGHT|Gravity.TOP, 0, 0);
+        mPopWindow.showAtLocation(rootview, Gravity.RIGHT | Gravity.TOP, 0, 0);
 
     }
 
