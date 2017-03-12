@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private View include_banner;
     private GridView userCalender;
     private PopupWindow mPopWindow;
+    private LinearLayout layoutJinJi,layoutJyw,layoutRecord;
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
@@ -239,6 +240,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void initializeComponent() {
         try {
+
+            layoutRecord=(LinearLayout)findViewById(R.id.layout_record);
+            layoutJinJi = (LinearLayout)findViewById(R.id.layout_jinji);
+            layoutJyw=(LinearLayout)findViewById(R.id.layout_jyw);
+            layoutRecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            layoutJinJi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+            layoutJyw.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
             //
             int itemPosition = 0;
             itemPosition = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), itemPosition).getValue());

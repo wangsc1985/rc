@@ -13,27 +13,27 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:orientation="vertical"
             android:padding="10dp">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="170dp"
                 android:layout_height="390dp"
-                android:src="@drawable/amtf"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/amtf" />
 
             <TextView
+                android:id="@+id/textView_Version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:id="@+id/textView_Version"
-                android:textColor="#ffffff"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#ffffff"
                 android:textSize="14dp"
                 android:visibility="gone" />
 
@@ -41,38 +41,38 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:text="微信：645708679"
                 android:textColor="#ffffff"
-                android:layout_gravity="center_horizontal"
                 android:textSize="14dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
-                android:text="加微信请注明“寿康宝鉴”"
+                android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:id="@+id/textView11"
+                android:text="加微信请注明“寿康宝鉴”"
                 android:visibility="gone" />
 
         </LinearLayout>
 
         <FrameLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_gravity="bottom|right">
+            android:layout_gravity="bottom|right"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <ImageButton
+                android:id="@+id/imageButton_setting"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:id="@+id/imageButton_setting"
-                android:src="@drawable/setting"
+                android:layout_gravity="center"
                 android:background="@drawable/menu_btn_bg"
                 android:padding="4dp"
-                android:layout_gravity="center"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/setting" />
 
         </FrameLayout>
 
@@ -84,15 +84,107 @@
         android:layout_height="fill_parent"
         android:background="#ffffff">
 
-        <TextView
-            android:id="@+id/textView_Content"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/tdr"
-            android:textColor="#000000" />
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/layout_record"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/error_color"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_chijie"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="9天16小时"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar_chijie"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="#ffffff"
+                        android:max="100"
+                        android:progress="81" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <include layout="@layout/include_separation"></include>
+
+            <LinearLayout
+                android:id="@+id/layout_jinji"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <TextView
+                    android:id="@+id/textView_jinji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="天地人忌介绍"
+                    android:textColor="@color/background_floating_material_dark"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <include layout="@layout/include_separation"></include>
+
+            <LinearLayout
+                android:id="@+id/layout_jyw"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
+
+                <TextView
+                    android:id="@+id/textView_jyw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="文昌帝君戒淫文"
+                    android:textColor="@color/background_floating_material_dark"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <include
+                layout="@layout/include_separation"
+                layout_width="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></include>
+
+            <TextView
+                android:id="@+id/textView_Content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/tdr"
+                android:textColor="#000000"
+                android:visibility="gone" />
+        </LinearLayout>
+
+
     </ScrollView>
 
     <LinearLayout
