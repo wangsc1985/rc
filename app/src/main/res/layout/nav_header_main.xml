@@ -121,7 +121,8 @@
                         android:layout_height="2dp"
                         android:background="#ffffff"
                         android:max="100"
-                        android:progress="81" />
+                        android:progress="81"
+                        android:progressDrawable="@drawable/my_progressbar1" />
                 </LinearLayout>
 
             </LinearLayout>
