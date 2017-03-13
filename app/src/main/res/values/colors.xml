@@ -10,4 +10,7 @@
     <color name="dot_dark_color">#b90404</color>
     <color name="calendar_yl_color">#ff706d72</color>
     <color name="calendar_nl_color">#aaa</color>
+    <color name="progress_color1">#087400</color>
+    <color name="progress_color2">#ff8c8e</color>
+    <color name="progress_color3">#ff8c8e</color>
 </resources>

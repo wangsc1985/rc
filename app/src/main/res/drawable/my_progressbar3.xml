@@ -20,10 +20,10 @@
         <shape>
             <corners android:radius="5dip" />
             <gradient
-                android:startColor="#ededed"
-                android:centerColor="#ededed"
+                android:startColor="#FFFFFF"
+                android:centerColor="#FFFFFF"
                 android:centerY="0.75"
-                android:endColor="#ededed"
+                android:endColor="#FFFFFF"
                 android:angle="270"
                 />
         </shape>
@@ -45,17 +45,14 @@
     </item>
 
     <item android:id="@android:id/progress">
-        <!--<clip-->
-            <!--android:clipOrientation="horizontal"-->
-            <!--android:gravity="right">-->
         <clip>
             <shape>
                 <corners android:radius="5dip" />
                 <gradient
-                    android:startColor="@color/progress_color2"
-                    android:centerColor="@color/progress_color2"
+                    android:startColor="@color/month_text_color"
+                    android:centerColor="@color/month_text_color"
                     android:centerY="0.75"
-                    android:endColor="@color/progress_color2"
+                    android:endColor="@color/month_text_color"
                     android:angle="270"
                     />
             </shape>
