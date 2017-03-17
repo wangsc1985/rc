@@ -75,26 +75,11 @@ public class ActionBarFragment extends Fragment {
         textView_title = (TextView) containerView.findViewById(R.id.textView_title);
         textView_title.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/GONGFANG.ttf"));
         //
-        ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.color_animator);
-        objectAnimator.setEvaluator(new ArgbEvaluator());
-        objectAnimator.setTarget(textView_title);
-        objectAnimator.start();
+//        ObjectAnimator objectAnimator = (ObjectAnimator) AnimatorInflater.loadAnimator(getContext(), R.animator.color_animator);
+//        objectAnimator.setEvaluator(new ArgbEvaluator());
+//        objectAnimator.setTarget(textView_title);
+//        objectAnimator.start();
         //
-        textView_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), SexualDayRecordActivity.class), TO_LIST);
-            }
-        });
-        textView_title.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                AddSexualDayDialog addSexualDayDialog = new AddSexualDayDialog(new DateTime());
-                addSexualDayDialog.show();
-                return true;
-            }
-        });
-        setTextViewSexualText();
         return containerView;
     }
 

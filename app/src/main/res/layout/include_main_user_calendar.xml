@@ -19,7 +19,7 @@
         android:paddingBottom="10dp"></GridView>
 
     <ProgressBar
-        android:id="@+id/progressBar_chijie2"
+        android:id="@+id/progressBar_chijie"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="1dp"
