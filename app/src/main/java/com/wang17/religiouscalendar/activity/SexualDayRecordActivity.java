@@ -185,8 +185,7 @@ public class SexualDayRecordActivity extends AppCompatActivity  implements Actio
                 layoutEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditSexualDayDialog editSexualDayDialog = new EditSexualDayDialog(sexualDay);
-                        editSexualDayDialog.show();
+                        showEditSexualDayDialog(sexualDay);
                     }
                 });
                 layoutDel.setOnClickListener(new View.OnClickListener() {
@@ -228,166 +227,91 @@ public class SexualDayRecordActivity extends AppCompatActivity  implements Actio
         }
     }
 
+    public void showEditSexualDayDialog(SexualDay sexualDay){
 
-    public class EditSexualDayDialog {
-        private Dialog dialog;
+        final SexualDay sd = sexualDay;
+        View view = View.inflate(SexualDayRecordActivity.this,R.layout.inflate_dialog_date_picker,null);
+        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(SexualDayRecordActivity.this).setView(view).show();
+        dialog.setTitle("设定时间");
 
-        public EditSexualDayDialog(SexualDay sexualDay) {
+        DateTime dateTime = sexualDay.getDateTime();
+        final int year = dateTime.getYear();
+        int month = dateTime.getMonth();
+//        int maxDay = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int day = dateTime.getDay();
+        int hour = dateTime.getHour();
 
-            try {
-                final SexualDay sd = sexualDay;
-                dialog = new Dialog(SexualDayRecordActivity.this);
-                dialog.setContentView(R.layout.inflate_dialog_date_picker);
-                dialog.setTitle("设定时间");
-
-                int year = sexualDay.getDateTime().getYear();
-                int month = sexualDay.getDateTime().getMonth();
-                int maxDay = sexualDay.getDateTime().getActualMaximum(Calendar.DAY_OF_MONTH);
-                int day = sexualDay.getDateTime().getDay();
-                int hour = sexualDay.getDateTime().getHour();
-
-                final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
-                final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
-                final NumberPicker npDay = (NumberPicker) dialog.findViewById(R.id.npDay);
-                final NumberPicker npHour = (NumberPicker) dialog.findViewById(R.id.npHour);
-                Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
-                Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
-                npYear.setMinValue(year - 2);
-                npYear.setMaxValue(year);
-                npYear.setValue(year);
-                npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npMonth.setMinValue(1);
-                npMonth.setMaxValue(12);
-                npMonth.setValue(month + 1);
-                npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npDay.setMinValue(1);
-                npDay.setMaxValue(maxDay);
-                npDay.setValue(day);
-                npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npHour.setMinValue(0);
-                npHour.setMaxValue(23);
-                npHour.setValue(hour);
-                npHour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                btnOK.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            int year = npYear.getValue();
-                            int month = npMonth.getValue() - 1;
-                            int day = npDay.getValue();
-                            int hour = npHour.getValue();
-                            DateTime selectedDateTime = new DateTime(year, month, day, hour, 0, 0);
-                            sd.setDateTime(selectedDateTime);
-                            dataContext.updateSexualDay(sd);
-                            recordListdAdapter.notifyDataSetChanged();
-                            dialog.cancel();
-                        } catch (Exception e) {
-                            _Helper.printException(SexualDayRecordActivity.this, e);
-                        }
-                    }
-                });
-                btnCancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            dialog.cancel();
-                        } catch (Exception e) {
-                            _Helper.printException(SexualDayRecordActivity.this, e);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                _Helper.printException(SexualDayRecordActivity.this, e);
-            }
+        String[] yearNumbers = new String[3];
+        for (int i = year-2; i <=year; i++) {
+            yearNumbers[i-year+2] = i + "年";
         }
-
-        public void show() {
-            try {
-                dialog.show();
-            } catch (Exception e) {
-                _Helper.printException(SexualDayRecordActivity.this, e);
-            }
+        String[] monthNumbers = new String[12];
+        for (int i = 0; i < 12; i++) {
+            monthNumbers[i] = i+1 + "月";
         }
-    }
-
-
-    public class AddSexualDayDialog {
-        private Dialog dialog;
-
-        public AddSexualDayDialog(DateTime dateTime) {
-            try {
-                dialog = new Dialog(SexualDayRecordActivity.this);
-                dialog.setContentView(R.layout.inflate_dialog_date_picker);
-                dialog.setTitle("设定时间");
-
-                int year = dateTime.getYear();
-                int month = dateTime.getMonth();
-                int maxDay = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
-                int day = dateTime.getDay();
-                int hour = dateTime.getHour();
-
-                final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
-                final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
-                final NumberPicker npDay = (NumberPicker) dialog.findViewById(R.id.npDay);
-                final NumberPicker npHour = (NumberPicker) dialog.findViewById(R.id.npHour);
-                Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
-                Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
-                npYear.setMinValue(year - 2);
-                npYear.setMaxValue(year);
-                npYear.setValue(year);
-                npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npMonth.setMinValue(1);
-                npMonth.setMaxValue(12);
-                npMonth.setValue(month + 1);
-                npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npDay.setMinValue(1);
-                npDay.setMaxValue(maxDay);
-                npDay.setValue(day);
-                npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npHour.setMinValue(0);
-                npHour.setMaxValue(23);
-                npHour.setValue(hour);
-                npHour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                btnOK.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            int year = npYear.getValue();
-                            int month = npMonth.getValue() - 1;
-                            int day = npDay.getValue();
-                            int hour = npHour.getValue();
-                            DateTime selectedDateTime = new DateTime(year, month, day, hour, 0, 0);
-                            SexualDay sexualDay = new SexualDay(selectedDateTime);
-                            dataContext.addSexualDay(sexualDay);
-                            recordListdAdapter.notifyDataSetChanged();
-                            dialog.cancel();
-                        } catch (Exception e) {
-                            _Helper.printException(SexualDayRecordActivity.this, e);
-                        }
-                    }
-                });
-                btnCancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            dialog.cancel();
-                        } catch (Exception e) {
-                            _Helper.printException(SexualDayRecordActivity.this, e);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                _Helper.printException(SexualDayRecordActivity.this, e);
-            }
+        String[] dayNumbers = new String[31];
+        for (int i = 0; i < 31; i++) {
+            dayNumbers[i] = i+1 + "日";
         }
-
-        public void show() {
-            try {
-                dialog.show();
-            } catch (Exception e) {
-                _Helper.printException(SexualDayRecordActivity.this, e);
-            }
+        String[] hourNumbers = new String[24];
+        for (int i = 0; i < 24; i++) {
+            hourNumbers[i] = i + "点";
         }
+        final NumberPicker npYear = (NumberPicker) view.findViewById(R.id.npYear);
+        final NumberPicker npMonth = (NumberPicker) view.findViewById(R.id.npMonth);
+        final NumberPicker npDay = (NumberPicker) view.findViewById(R.id.npDay);
+        final NumberPicker npHour = (NumberPicker) view.findViewById(R.id.npHour);
+        npYear.setMinValue(year - 2);
+        npYear.setMaxValue(year);
+        npYear.setValue(year);
+        npYear.setDisplayedValues(yearNumbers);
+        npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npMonth.setMinValue(1);
+        npMonth.setMaxValue(12);
+        npMonth.setDisplayedValues(monthNumbers);
+        npMonth.setValue(month+1);
+        npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npDay.setMinValue(1);
+        npDay.setMaxValue(31);
+        npDay.setDisplayedValues(dayNumbers);
+        npDay.setValue(day);
+        npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npHour.setMinValue(0);
+        npHour.setMaxValue(23);
+        npHour.setDisplayedValues(hourNumbers);
+        npHour.setValue(hour);
+        npHour.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+
+
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    int year = npYear.getValue();
+                    int month = npMonth.getValue() - 1;
+                    int day = npDay.getValue();
+                    int hour = npHour.getValue();
+                    DateTime selectedDateTime = new DateTime(year, month, day, hour, 0, 0);
+                    sd.setDateTime(selectedDateTime);
+                    dataContext.updateSexualDay(sd);
+                    recordListdAdapter.notifyDataSetChanged();
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(SexualDayRecordActivity.this,e);
+                }
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(SexualDayRecordActivity.this,e);
+                }
+            }
+        });
+        dialog.show();
     }
 
     private void snackbar(String message) {
