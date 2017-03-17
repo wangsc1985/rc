@@ -826,68 +826,126 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onClick(View v) {
             try {
-                MonthPickerDialog monthPickerDialog = new MonthPickerDialog(currentYear, currentMonth);
-                monthPickerDialog.show();
+                showMonthPickerDialog(currentYear, currentMonth);
             } catch (Exception ex) {
                 _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
             }
         }
     };
 
-    public class MonthPickerDialog {
-        Dialog dialog;
 
-        /**
-         * @param year  1900 - 2049
-         * @param month 0 - 11
-         */
-        public MonthPickerDialog(int year, int month) {
-            try {
-                dialog = new Dialog(MainActivity.this);
-                dialog.setContentView(R.layout.inflate_date_picker_dialog);
-                dialog.setTitle("选择月份");
+    public void showMonthPickerDialog(int year, int month) {
+        View view = View.inflate(MainActivity.this, R.layout.inflate_date_picker_dialog, null);
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).setView(view).create();
+        dialog.setTitle("选择月份");
 
-                final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
-                final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
-                Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
-                Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
-                npYear.setMinValue(Lunar.MinYear);
-                npYear.setMaxValue(Lunar.MaxYear);
-                npYear.setValue(year);
-                npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                npMonth.setMinValue(1);
-                npMonth.setMaxValue(12);
-                npMonth.setValue(month + 1);
-                npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
-                btnOK.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int year = npYear.getValue();
-                        int month = npMonth.getValue() - 1;
-                        DateTime dateTime = new DateTime();
-                        dateTime.set(year, month, 1);
-                        int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
-                        int selectedDay = MainActivity.this.selectedDate.getDay();
-                        setSelectedDate(year, month, maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
-                        //                    refreshCalendarWithDialog();
-                        dialog.cancel();
-                    }
-                });
-                btnCancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-            } catch (Exception e) {
-                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+
+        final NumberPicker npYear = (NumberPicker) view.findViewById(R.id.npYear);
+        final NumberPicker npMonth = (NumberPicker) view.findViewById(R.id.npMonth);
+
+
+        String[] yearValues = new String[Lunar.MaxYear - Lunar.MinYear + 1];
+        for (int i = 0; i < yearValues.length; i++) {
+            yearValues[i] = i + Lunar.MinYear + "年";
+        }
+
+        String[] monthValues = new String[12];
+        for (int i = 0; i < monthValues.length; i++) {
+            monthValues[i] = i + 1 + "月";
+        }
+
+
+        npYear.setMinValue(Lunar.MinYear);
+        npYear.setMaxValue(Lunar.MaxYear);
+        npYear.setDisplayedValues(yearValues);
+        npYear.setValue(year);
+        npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npMonth.setMinValue(1);
+        npMonth.setMaxValue(12);
+        npMonth.setDisplayedValues(monthValues);
+        npMonth.setValue(month + 1);
+        npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+
+
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "选择", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                int year = npYear.getValue();
+                int month = npMonth.getValue() - 1;
+                DateTime dateTime = new DateTime();
+                dateTime.set(year, month, 1);
+                int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+                int selectedDay = MainActivity.this.selectedDate.getDay();
+                setSelectedDate(year, month, maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
+                //                    refreshCalendarWithDialog();
+                dialog.dismiss();
             }
-        }
-
-        public void show() {
-            dialog.show();
-        }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
+
+//    public class MonthPickerDialog {
+//        Dialog dialog;
+//
+//        /**
+//         * @param year  1900 - 2049
+//         * @param month 0 - 11
+//         */
+//        public MonthPickerDialog(int year, int month) {
+//            try {
+//                dialog = new Dialog(MainActivity.this);
+//                dialog.setContentView(R.layout.inflate_date_picker_dialog);
+//                dialog.setTitle("选择月份");
+//
+//                final NumberPicker npYear = (NumberPicker) dialog.findViewById(R.id.npYear);
+//                final NumberPicker npMonth = (NumberPicker) dialog.findViewById(R.id.npMonth);
+//                Button btnOK = (Button) dialog.findViewById(R.id.btnOK);
+//                Button btnCancle = (Button) dialog.findViewById(R.id.btnCancel);
+//
+//
+//                npYear.setMinValue(Lunar.MinYear);
+//                npYear.setMaxValue(Lunar.MaxYear);
+//                npYear.setValue(year);
+//                npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+//                npMonth.setMinValue(1);
+//                npMonth.setMaxValue(12);
+//                npMonth.setValue(month + 1);
+//                npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+//                btnOK.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int year = npYear.getValue();
+//                        int month = npMonth.getValue() - 1;
+//                        DateTime dateTime = new DateTime();
+//                        dateTime.set(year, month, 1);
+//                        int maxDayOfMonth = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+//                        int selectedDay = MainActivity.this.selectedDate.getDay();
+//                        setSelectedDate(year, month, maxDayOfMonth < selectedDay ? maxDayOfMonth : selectedDay);
+//                        //                    refreshCalendarWithDialog();
+//                        dialog.cancel();
+//                    }
+//                });
+//                btnCancle.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.cancel();
+//                    }
+//                });
+//            } catch (Exception e) {
+//                _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
+//            }
+//        }
+//
+//        public void show() {
+//            dialog.show();
+//        }
+//    }
 
     /**
      * 事件 - 点击日历某天
