@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.AnimatorInflater;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -107,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private HashMap<DateTime, String> religiousDays, remarks;
     private Handler uiHandler;
     private float locationX, locationY;
+    private static final int TO_SEXUAL_RECORD_ACTIVITY = 298;
+    public static final int TO_SETTING_ACTIVITY = 1;
 
     @Override
     protected void onPause() {
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             }
-            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING);
+            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING_ACTIVITY);
             return true;
         }
     };
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.closeDrawer(GravityCompat.START);
             }
-            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING);
+            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING_ACTIVITY);
         }
     };
     //endregion
@@ -248,18 +248,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onClick(View v) {
                     // TODO: 2017/3/12 进入记录列表
+                    startActivityForResult(new Intent(MainActivity.this,SexualDayRecordActivity.class),TO_SEXUAL_RECORD_ACTIVITY);
                 }
             });
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: 2017/3/12 查看天地人忌
+                    Intent intent = new Intent(MainActivity.this,IntroduceActivity.class);
+                    intent.putExtra(IntroduceActivity.PARAM_NAME, IntroduceActivity.ItemName.天地人禁忌.toString());
+                    startActivity(intent);
                 }
             });
             layoutJyw.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: 2017/3/12 查看戒淫文
+                    Intent intent = new Intent(MainActivity.this,IntroduceActivity.class);
+                    intent.putExtra(IntroduceActivity.PARAM_NAME, IntroduceActivity.ItemName.文昌帝君戒淫文.toString());
+                    startActivity(intent);
                 }
             });
 
@@ -308,10 +313,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fontHWZS = Typeface.createFromAsset(mgr, "fonts/STZHONGS.TTF");
             fontGF = Typeface.createFromAsset(mgr, "fonts/GONGFANG.ttf");
 
-            TextView textViewContent = (TextView) findViewById(R.id.textView_Content);
-            textViewContent.setLineSpacing(1f, 1.2f);
-            textViewContent.setTypeface(fontHWZS);
-            textViewContent.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
 
             textView_fo = (TextView) findViewById(R.id.tvfo);
 //            textView_fo.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
@@ -1266,7 +1267,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = menuItem.getItemId();
         if (id == R.id.menu_settings) {
-            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING);
+            startActivityForResult(new Intent(MainActivity.this, SettingActivity.class), TO_SETTING_ACTIVITY);
         }
 //        else if (id == R.id.menu_select) {
 //            try {
@@ -1281,15 +1282,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public static final int TO_SETTING = 1;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            if (requestCode == TO_SETTING) {
-                if (SettingActivity.calenderChanged) {
-                    refreshCalendarWithDialog("配置已更改，正在重新加载...");
-                }
+            switch (requestCode){
+                case TO_SETTING_ACTIVITY:
+                    if (SettingActivity.calenderChanged) {
+                        refreshCalendarWithDialog("配置已更改，正在重新加载...");
+                    }
+                    break;
+                case TO_SEXUAL_RECORD_ACTIVITY:
+                    // TODO: 2017/3/20 戒期时间被修改之后，需要执行的操作。
+                    break;
             }
         } catch (NumberFormatException e) {
             _Helper.printExceptionSycn(MainActivity.this, uiHandler, e);
@@ -1302,7 +1307,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @NeedsPermission({Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
     void showUMAnalytics() {
-        // TODO: 当这些权限全部通过后，执行此方法。
+        //  当这些权限全部通过后，执行此方法。
         //　调用统计接口，触发 MTA 并上传数据。
         //  寿康宝鉴日历：583e55e58f4a9d18a2002075
         //  test: 583d7eede88bad552b00138c
@@ -1313,7 +1318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @OnShowRationale({Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
     void showRationaleForUMAnalytics(final PermissionRequest request) {
-        // TODO: 解释了为什么需要此权限
+        // 解释了为什么需要此权限
         // It passes in a PermissionRequest object which can be used to continue or abort the current permission request upon user input
 //        showRationaleDialog("软件运行数据分析权限，禁止此权限不会影响软件正常使用，但不利于软件的升级与维护。", request);
     }
@@ -1321,14 +1326,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @OnPermissionDenied({Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
     void showDeniedForUMAnalytics() {
-        // TODO: 如果用户拒绝权限，执行此方法
+        //  如果用户拒绝权限，执行此方法
 //        new AlertDialog.Builder(this).setMessage("禁止此权限不会影响软件正常使用，但不利于软件的升级与维护。").setPositiveButton("知道了",null).show();
     }
 
     @OnNeverAskAgain({Manifest.permission.INTERNET,
             Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE})
     void showNeverAskForUMAnalytics() {
-        // TODO: 如果用户对某一权限选择“再也不会问”，执行此方法
+        //  如果用户对某一权限选择“再也不会问”，执行此方法
 //        new AlertDialog.Builder(this).setMessage("不会再询问此权限！").setPositiveButton("知道了",null).show();
     }
 

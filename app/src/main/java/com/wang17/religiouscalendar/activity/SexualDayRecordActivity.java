@@ -1,7 +1,7 @@
 package com.wang17.religiouscalendar.activity;
 
+
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,7 +27,6 @@ import com.wang17.religiouscalendar.helper._String;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.SexualDay;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class SexualDayRecordActivity extends AppCompatActivity  implements ActionBarFragment.OnActionFragmentBackListener {
@@ -44,66 +42,66 @@ public class SexualDayRecordActivity extends AppCompatActivity  implements Actio
 
     /**
 
-    20 4
-    21 4.4
-    22 4.8
-    23 5.2
-    24 5.6
-    25 6
-    26 6.4
-    27 6.8
-    28 7.2
-    29 7.6
-    30 8
+     20 4
+     21 4.4
+     22 4.8
+     23 5.2
+     24 5.6
+     25 6
+     26 6.4
+     27 6.8
+     28 7.2
+     29 7.6
+     30 8
 
-    31 8.8
-    32 9.6
-    33 10.4
-    34 11.2
-    35 12
-    36 12.8
-    37 13.6
-    38 14.4
-    39 15.2
-    40 16
+     31 8.8
+     32 9.6
+     33 10.4
+     34 11.2
+     35 12
+     36 12.8
+     37 13.6
+     38 14.4
+     39 15.2
+     40 16
 
-    41 16.5
-    42 17
-    43 17.5
-    44 18
-    45 18.5
-    46 19
-    47 19.5
-    48 20
-    49 20.5
-    50 21
+     41 16.5
+     42 17
+     43 17.5
+     44 18
+     45 18.5
+     46 19
+     47 19.5
+     48 20
+     49 20.5
+     50 21
 
-    51 21.9
-    52 22.8
-    53 23.7
-    54 24.6
-    55 25.5
-    56 26.4
-    57 27.3
-    58 28.2
-    59 29.1
-    60 30
+     51 21.9
+     52 22.8
+     53 23.7
+     54 24.6
+     55 25.5
+     56 26.4
+     57 27.3
+     58 28.2
+     59 29.1
+     60 30
 
-    20 4
-    30 8
-    40 16
-    50 21
-    60 30
-    年二十者四日一泄;年三十者，
-    八日一泄;年四十者，
-    十六日一泄;
-    年五十者，
-    二十一日一泄;
-    年六十者，毕，闭精勿复泄也。
-    若体力犹壮者，一月一泄。
-    凡人气力，自相有强盛过人，亦不可抑忍。
-    久而不泄，至生痈疽。
-    若年过六十，而有数旬不得交接，意中平平者，可闭精勿泄也。
+     20 4
+     30 8
+     40 16
+     50 21
+     60 30
+     年二十者四日一泄;年三十者，
+     八日一泄;年四十者，
+     十六日一泄;
+     年五十者，
+     二十一日一泄;
+     年六十者，毕，闭精勿复泄也。
+     若体力犹壮者，一月一泄。
+     凡人气力，自相有强盛过人，亦不可抑忍。
+     久而不泄，至生痈疽。
+     若年过六十，而有数旬不得交接，意中平平者，可闭精勿泄也。
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,7 +229,7 @@ public class SexualDayRecordActivity extends AppCompatActivity  implements Actio
 
         final SexualDay sd = sexualDay;
         View view = View.inflate(SexualDayRecordActivity.this,R.layout.inflate_dialog_date_picker,null);
-        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(SexualDayRecordActivity.this).setView(view).show();
+        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(SexualDayRecordActivity.this).setView(view).create();
         dialog.setTitle("设定时间");
 
         DateTime dateTime = sexualDay.getDateTime();
