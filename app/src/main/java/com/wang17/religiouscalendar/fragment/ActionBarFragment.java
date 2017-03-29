@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.wang17.religiouscalendar.R;
@@ -74,6 +75,8 @@ public class ActionBarFragment extends Fragment {
         if(backListener ==null){
             imageView_back.setVisibility(View.INVISIBLE);
         }
+
+
         //
         textView_title = (TextView) containerView.findViewById(R.id.textView_title);
         textView_title.setTypeface(Typeface.createFromAsset(getActivity().getAssets(), "fonts/GONGFANG.ttf"));
@@ -131,6 +134,7 @@ public class ActionBarFragment extends Fragment {
         // 更新参数的类型和名字
         void onBackListener();
     }
+
 
     public void setDateTimeDialog(DateTime dateTime){
 

@@ -1,6 +1,7 @@
 package com.wang17.religiouscalendar.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,9 +20,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
@@ -34,6 +37,7 @@ import com.wang17.religiouscalendar.helper._Helper;
 import com.wang17.religiouscalendar.helper._Session;
 import com.wang17.religiouscalendar.helper._String;
 import com.wang17.religiouscalendar.model.DataContext;
+import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.LunarDate;
 import com.wang17.religiouscalendar.model.MemorialDay;
 import com.wang17.religiouscalendar.model.Setting;
@@ -49,6 +53,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private Button btn_addMD;
     private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
     private TextView textView_guide, textView_update;
+    private ToggleButton toggleButtonShowRecord;
 
     public static boolean calenderChanged;
     private DataContext dataContext;
@@ -80,6 +85,8 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             checkBox_lzr = (CheckBox) findViewById(R.id.checkBox_lzr);
             checkBox_gyz = (CheckBox) findViewById(R.id.checkBox_gyz);
 
+            toggleButtonShowRecord = (ToggleButton) findViewById(R.id.toggleButton_showRecord);
+
             this.initializeFields();
             this.initializeEvents();
             Log.i("wangsc", "SettingActivity have loaded ...");
@@ -98,6 +105,15 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
 
             TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
             textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
+
+
+            toggleButtonShowRecord.setChecked(Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.isShowRecords.toString(), "false").getValue()));
+            toggleButtonShowRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    dataContext.editSetting(Setting.KEYS.isShowRecords.toString(), isChecked + "");
+                }
+            });
 
             Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString(), false + "");
             checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
@@ -227,22 +243,31 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         checkBox_szr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dataContext.editSetting(Setting.KEYS.szr.toString(), isChecked + "");
-                calenderChanged = true;
+                if (buttonView.isPressed()) {
+                    dataContext.editSetting(Setting.KEYS.szr.toString(), isChecked + "");
+                    calenderChanged = true;
+                    snackbarSaved();
+                }
             }
         });
         checkBox_lzr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dataContext.editSetting(Setting.KEYS.lzr.toString(), isChecked + "");
-                calenderChanged = true;
+                if (buttonView.isPressed()) {
+                    dataContext.editSetting(Setting.KEYS.lzr.toString(), isChecked + "");
+                    calenderChanged = true;
+                    snackbarSaved();
+                }
             }
         });
         checkBox_gyz.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                dataContext.editSetting(Setting.KEYS.gyz.toString(), isChecked + "");
-                calenderChanged = true;
+                if (buttonView.isPressed()) {
+                    dataContext.editSetting(Setting.KEYS.gyz.toString(), isChecked + "");
+                    calenderChanged = true;
+                    snackbarSaved();
+                }
             }
         });
         btn_addMD.setOnClickListener(new View.OnClickListener() {
@@ -272,12 +297,14 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         spinner_zodiac1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
-                String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
-                dataContext.editSetting(Setting.KEYS.zodiac1.toString(), zodiac);
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                    calenderChanged = true;
-                    snackbarSaved();
+                if (view.isPressed()) {
+                    Setting setting = dataContext.getSetting(Setting.KEYS.zodiac1.toString());
+                    String zodiac = spinner_zodiac1.getItemAtPosition(position).toString();
+                    dataContext.editSetting(Setting.KEYS.zodiac1.toString(), zodiac);
+                    if (setting != null && !setting.getValue().equals(zodiac)) {
+                        calenderChanged = true;
+                        snackbarSaved();
+                    }
                 }
             }
 
@@ -289,12 +316,14 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         spinner_zodiac2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
-                String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
-                dataContext.editSetting(Setting.KEYS.zodiac2.toString(), zodiac);
-                if (setting != null && !setting.getValue().equals(zodiac)) {
-                    calenderChanged = true;
-                    snackbarSaved();
+                if (view.isPressed()) {
+                    Setting setting = dataContext.getSetting(Setting.KEYS.zodiac2.toString());
+                    String zodiac = spinner_zodiac2.getItemAtPosition(position).toString();
+                    dataContext.editSetting(Setting.KEYS.zodiac2.toString(), zodiac);
+                    if (setting != null && !setting.getValue().equals(zodiac)) {
+                        calenderChanged = true;
+                        snackbarSaved();
+                    }
                 }
             }
 
@@ -306,10 +335,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         spinner_welcome.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                                       @Override
                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                          Setting setting = dataContext.getSetting(Setting.KEYS.welcome.toString(), 0);
-                                                          if (!setting.getValue().equals(spinner_welcome.getSelectedItemPosition() + "")) {
-                                                              dataContext.editSetting(Setting.KEYS.welcome.toString(), spinner_welcome.getSelectedItemPosition() + "");
-                                                              snackbarSaved();
+                                                          if (view.isPressed()) {
+                                                              Setting setting = dataContext.getSetting(Setting.KEYS.welcome.toString(), 0);
+                                                              if (!setting.getValue().equals(spinner_welcome.getSelectedItemPosition() + "")) {
+                                                                  dataContext.editSetting(Setting.KEYS.welcome.toString(), spinner_welcome.getSelectedItemPosition() + "");
+                                                                  snackbarSaved();
+                                                              }
                                                           }
                                                       }
 
@@ -323,10 +354,12 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
         spinner_duration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1);
-                if (!setting.getValue().equals(spinner_duration.getSelectedItemPosition() + "")) {
-                    dataContext.editSetting(Setting.KEYS.welcome_duration.toString(), (spinner_duration.getSelectedItemPosition()) + "");
-                    snackbarSaved();
+                if (view.isPressed()) {
+                    Setting setting = dataContext.getSetting(Setting.KEYS.welcome_duration.toString(), 1);
+                    if (!setting.getValue().equals(spinner_duration.getSelectedItemPosition() + "")) {
+                        dataContext.editSetting(Setting.KEYS.welcome_duration.toString(), (spinner_duration.getSelectedItemPosition()) + "");
+                        snackbarSaved();
+                    }
                 }
             }
 
@@ -459,6 +492,76 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
     private void snackbar(String message) {
         RelativeLayout root = (RelativeLayout) findViewById(R.id.layout_setting_root);
         Snackbar.make(root, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    public void selectDateDialog(final Context context, DateTime date) {
+
+        View view = View.inflate(context, R.layout.inflate_dialog_date_picker, null);
+        android.support.v7.app.AlertDialog dialog = new android.support.v7.app.AlertDialog.Builder(context).setView(view).create();
+        dialog.setTitle("设定时间");
+
+        final int year = date.getYear();
+        int month = date.getMonth();
+//        int maxDay = dateTime.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int day = date.getDay();
+
+        String[] yearNumbers = new String[3];
+        for (int i = year - 2; i <= year; i++) {
+            yearNumbers[i - year + 2] = i + "年";
+        }
+        String[] monthNumbers = new String[12];
+        for (int i = 0; i < 12; i++) {
+            monthNumbers[i] = i + 1 + "月";
+        }
+        String[] dayNumbers = new String[31];
+        for (int i = 0; i < 31; i++) {
+            dayNumbers[i] = i + 1 + "日";
+        }
+        final NumberPicker npYear = (NumberPicker) view.findViewById(R.id.npYear);
+        final NumberPicker npMonth = (NumberPicker) view.findViewById(R.id.npMonth);
+        final NumberPicker npDay = (NumberPicker) view.findViewById(R.id.npDay);
+        npYear.setMinValue(year - 2);
+        npYear.setMaxValue(year);
+        npYear.setValue(year);
+        npYear.setDisplayedValues(yearNumbers);
+        npYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npMonth.setMinValue(1);
+        npMonth.setMaxValue(12);
+        npMonth.setDisplayedValues(monthNumbers);
+        npMonth.setValue(month + 1);
+        npMonth.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+        npDay.setMinValue(1);
+        npDay.setMaxValue(31);
+        npDay.setDisplayedValues(dayNumbers);
+        npDay.setValue(day);
+        npDay.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS); // 禁止对话框打开后数字选择框被选中
+
+
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    int year = npYear.getValue();
+                    int month = npMonth.getValue() - 1;
+                    int day = npDay.getValue();
+                    DateTime selectedDateTime = new DateTime(year, month, day, 2, 0, 0);
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(context, e);
+                }
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    _Helper.printException(context, e);
+                }
+            }
+        });
+        dialog.show();
     }
 
     @Override

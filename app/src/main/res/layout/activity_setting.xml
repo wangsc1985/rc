@@ -55,14 +55,16 @@
                 <include layout="@layout/include_setting_part4" />
 
                 <!-- 分割线 -->
-                <!--<include layout="@layout/include_separation0"/>-->
-                <!--<include layout="@layout/include_setting_part5" />-->
+                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_setting_part5" />
 
                 <!-- 分割线 -->
                 <!--<include layout="@layout/include_separation0"/>-->
                 <!--<include layout="@layout/include_setting_part6" />-->
 
                 <!-- 分割线 -->
+                <include layout="@layout/include_separation0"/>
+                <include layout="@layout/include_separation0"/>
                 <include layout="@layout/include_separation0"/>
                 <include layout="@layout/include_setting_part7"/>
             </LinearLayout>

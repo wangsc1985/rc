@@ -62,12 +62,12 @@
         android:typeface="monospace" />
 
     <TextView
-        android:text="加微信申请验证时，请注明“寿康宝鉴”或“阿弥陀佛”。"
+        android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:id="@+id/textView11"
-        android:textColor="@color/hint_foreground_material_light"
+        android:text="加微信申请验证时，请注明“寿康宝鉴”或“阿弥陀佛”。"
+        android:textColor="@color/calendar_yl_color"
         android:textSize="10dp"
         android:typeface="monospace" />
 

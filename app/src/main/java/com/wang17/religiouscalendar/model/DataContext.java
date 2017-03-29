@@ -26,7 +26,6 @@ public class DataContext {
         this.context = context;
     }
 
-
     //region RunLog
     public List<RunLog> getRunLogs() {
         List<RunLog> result = new ArrayList<>();

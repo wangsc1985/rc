@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
@@ -53,6 +54,7 @@ import com.wang17.religiouscalendar.model.CalendarItem;
 import com.wang17.religiouscalendar.model.DataContext;
 import com.wang17.religiouscalendar.model.DateTime;
 import com.wang17.religiouscalendar.model.Setting;
+import com.wang17.religiouscalendar.model.SexualDay;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -62,9 +64,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -80,7 +84,7 @@ import permissions.dispatcher.RuntimePermissions;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener, View.OnTouchListener {
 
     // 视图变量
-    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today;
+    private TextView textView_ganzhi, textView_nongli, textView_fo, button_today, textViewChijie1, textViewChijie2;
     private CalenderGridAdapter calendarAdapter;
     private ImageButton imageButton_leftMenu, imageButton_settting;
     private ImageView imageView_banner, imageView_welcome;
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GridView userCalender;
     private PopupWindow mPopWindow;
     private LinearLayout layoutJinJi, layoutJyw, layoutRecord;
+    private ProgressBar progressBarRecords;
     // 类变量
     private ProgressDialog progressDialog;
     private DataContext dataContext;
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // 值变量
     private int calendarItemCount, preSelectedPosition, todayPosition, currentYear, currentMonth;
     private long xxxTimeMillis;
-    private boolean isFirstTime;
+    private boolean isFirstTime, isShowRecords;
     private Map<Integer, CalendarItem> calendarItemsMap;
     private TreeMap<DateTime, SolarTerm> solarTermMap;
     private Map<DateTime, SolarTerm> currentMonthSolarTerms;
@@ -139,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
 
             DataContext context = new DataContext(this);
@@ -158,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             dataContext = new DataContext(MainActivity.this);
             isFirstTime = true;
 
-            setContentView(R.layout.activity_main);
 
             drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -241,20 +246,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initializeComponent() {
         try {
 
+            //region 持戒记录功能设置
+
+
+            progressBarRecords = (ProgressBar) findViewById(R.id.progressBar_records);
             layoutRecord = (LinearLayout) findViewById(R.id.layout_record);
+            textViewChijie1 = (TextView) findViewById(R.id.textView_chijie);
+            textViewChijie2 = (TextView) findViewById(R.id.textView_chijie2);
+
+
+            isShowRecords = Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.isShowRecords.toString(), "false").getValue());
+            if (isShowRecords) {
+                SexualDay sexualDayList = dataContext.getLastSexualDay();
+
+                progressBarRecords.setMax(100);
+                progressBarRecords.setProgress(23);
+
+                layoutRecord.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: 2017/3/12 进入记录列表
+                        startActivityForResult(new Intent(MainActivity.this, SexualDayRecordActivity.class), TO_SEXUAL_RECORD_ACTIVITY);
+                    }
+                });
+
+                textViewChijie1.setText("持戒多长时间");
+                textViewChijie2.setText("剩余时间");
+            }else{
+                progressBarRecords.setVisibility(View.GONE);
+                layoutRecord.setVisibility(View.GONE);
+            }
+
+
+            //endregion
+
+
+            //region 左侧菜单操作
             layoutJinJi = (LinearLayout) findViewById(R.id.layout_jinji);
             layoutJyw = (LinearLayout) findViewById(R.id.layout_jyw);
-            layoutRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: 2017/3/12 进入记录列表
-                    startActivityForResult(new Intent(MainActivity.this,SexualDayRecordActivity.class),TO_SEXUAL_RECORD_ACTIVITY);
-                }
-            });
             layoutJinJi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this,IntroduceActivity.class);
+                    Intent intent = new Intent(MainActivity.this, IntroduceActivity.class);
                     intent.putExtra(IntroduceActivity.PARAM_NAME, IntroduceActivity.ItemName.天地人禁忌.toString());
                     startActivity(intent);
                 }
@@ -262,11 +295,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             layoutJyw.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this,IntroduceActivity.class);
+                    Intent intent = new Intent(MainActivity.this, IntroduceActivity.class);
                     intent.putExtra(IntroduceActivity.PARAM_NAME, IntroduceActivity.ItemName.文昌帝君戒淫文.toString());
                     startActivity(intent);
                 }
             });
+            //endregion
 
             // TODO: 2017/3/12 为侧边栏记录文本和进度条赋值
 
@@ -278,25 +312,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 dataContext.editSetting(Setting.KEYS.banner.toString(), itemPosition);
             }
 
-//            layout_upper_banner = (LinearLayout) findViewById(R.id.layout_upper_banner);
             // 加载include_main_banner
-//            include_banner = getLayoutInflater().inflate(R.layout.include_main_banner, null);
             imageView_banner = (ImageView) findViewById(R.id.imageView_banner);
             imageView_banner.setImageResource(_Session.banners.get(itemPosition).getResId());
             imageView_banner.setOnClickListener(new View.OnClickListener() {//2130903043
                 @Override
                 public void onClick(View v) {
-//                    try {
-//                        int position = 0;
-//                        position = Integer.parseInt(dataContext.getSetting(Setting.KEYS.banner.toString(), position).getValue()) + 1;
-//                        if (position >= _Session.banners.size()) {
-//                            position = 0;
-//                        }
-//                        dataContext.editSetting(Setting.KEYS.banner.toString(), position);
-//                        imageView_banner.setImageResource(_Session.banners.get(position).getResId());
-//                    } catch (Exception ex) {
-//                        _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
-//                    }
                     showPopupWindow();
                 }
             });
@@ -370,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             _Helper.printExceptionSycn(MainActivity.this, uiHandler, ex);
         }
     }
+
 
     private void showPopupWindow() {
         //设置contentView
@@ -1286,7 +1308,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
-            switch (requestCode){
+            switch (requestCode) {
                 case TO_SETTING_ACTIVITY:
                     if (SettingActivity.calenderChanged) {
                         refreshCalendarWithDialog("配置已更改，正在重新加载...");
