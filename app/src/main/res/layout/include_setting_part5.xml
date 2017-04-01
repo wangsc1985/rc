@@ -16,45 +16,99 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="状态："
-            android:textColor="#000000"
-            android:textSize="14dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:visibility="gone" />
+            style="@style/MyTextViewTitle2Style"
+            android:text="状态：" />
 
-        <ToggleButton
-            android:id="@+id/toggleButton_showRecord"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="ToggleButton"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textOff="已关闭"
-            android:textOn="启用中" />
+        <Button
+            android:id="@+id/button_recordStatus"
+            style="@style/MyButtonStyle"
+            android:text="已开启" />
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="生日："
-            android:textColor="#000000"
-            android:textSize="14dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            style="@style/MyTextViewTitle2Style"
+            android:text="持戒目标：" />
+
+        <Button
+            android:id="@+id/button_targetWay"
+            style="@style/MyButtonStyle"
+            android:text="自动" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_birthday"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView13"
+            style="@style/MyTextViewTitle2Style"
+            android:text="生日：" />
+
+        <Button
+            android:id="@+id/button_birthday"
+            style="@style/MyButtonStyle"
+            android:text="设置生日" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView13"
+            style="@style/MyTextViewTitle2Style"
+            android:text="自定义：" />
+
+        <Button
+            android:id="@+id/button_customTarget"
+            style="@style/MyButtonStyle"
+            android:text="设置时间间隔" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView13"
+            style="@style/MyTextViewTitle2Style"
+            android:text="说明：持戒目标设置为“自动”时，每次行房间隔，根据孙思邈及素女经，按照年龄，计算合理的行房间隔。如果设置为“自定义”，则每次行房间隔由自己设定。" />
+
     </LinearLayout>
 
 </LinearLayout>

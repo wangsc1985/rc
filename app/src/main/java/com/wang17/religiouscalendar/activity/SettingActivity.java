@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
@@ -24,7 +23,6 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.umeng.analytics.MobclickAgent;
 import com.wang17.religiouscalendar.R;
@@ -49,16 +47,21 @@ import java.util.UUID;
 
 public class SettingActivity extends AppCompatActivity implements OnActionFragmentBackListener {
 
+    private LinearLayout layoutBirthday, layoutCustom;
     private Spinner spinner_zodiac1, spinner_zodiac2, spinner_mdtype, spinner_mdrelation, spinner_month, spinner_day, spinner_welcome, spinner_duration;
-    private Button btn_addMD;
+    private Button btn_addMD, btnRecordStatus, btnWay, btnBirthday, btnCustomTarget;
     private CheckBox checkBox_szr, checkBox_lzr, checkBox_gyz;
     private TextView textView_guide, textView_update;
-    private ToggleButton toggleButtonShowRecord;
 
     public static boolean calenderChanged;
     private DataContext dataContext;
     private MDlistdAdapter mdListAdapter;
     private List<HashMap<String, String>> mdListItems;
+
+    private static final String BUTTON_STATUS_TEXT_OFF = "已关闭";
+    private static final String BUTTON_STATUS_TEXT_ON = "已开启";
+    private static final String BUTTON_WAY_TEXT_AUTO = "自动";
+    private static final String BUTTON_WAY_TEXT_CUSTOM = "自定义";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,13 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             checkBox_lzr = (CheckBox) findViewById(R.id.checkBox_lzr);
             checkBox_gyz = (CheckBox) findViewById(R.id.checkBox_gyz);
 
-            toggleButtonShowRecord = (ToggleButton) findViewById(R.id.toggleButton_showRecord);
+            layoutBirthday = (LinearLayout) findViewById(R.id.layout_birthday);
+            layoutCustom = (LinearLayout) findViewById(R.id.layout_custom);
+
+            btnRecordStatus = (Button) findViewById(R.id.button_recordStatus);
+            btnWay = (Button) findViewById(R.id.button_targetWay);
+            btnBirthday = (Button) findViewById(R.id.button_birthday);
+            btnCustomTarget = (Button) findViewById(R.id.button_customTarget);
 
             this.initializeFields();
             this.initializeEvents();
@@ -106,14 +115,51 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
             TextView textViewVersion = (TextView) findViewById(R.id.textView_Version);
             textViewVersion.setText("寿康宝鉴日历 " + this.getPackageManager().getPackageInfo(this.getPackageName(), 0).versionName);
 
+            if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.recordStatus.toString(), "true").getValue()) == true) {
+                btnRecordStatus.setText(BUTTON_STATUS_TEXT_ON);
+            } else {
+                btnRecordStatus.setText(BUTTON_STATUS_TEXT_OFF);
+            }
 
-            toggleButtonShowRecord.setChecked(Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.isShowRecords.toString(), "false").getValue()));
-            toggleButtonShowRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            if (Boolean.parseBoolean(dataContext.getSetting(Setting.KEYS.targetAuto.toString(), "true").getValue()) == true) {
+                btnWay.setText(BUTTON_WAY_TEXT_AUTO);
+                layoutBirthday.setVisibility(View.VISIBLE);
+                layoutCustom.setVisibility(View.GONE);
+            } else {
+                btnWay.setText(BUTTON_WAY_TEXT_CUSTOM);
+                layoutBirthday.setVisibility(View.GONE);
+                layoutCustom.setVisibility(View.VISIBLE);
+            }
+
+            Setting settingBirthday = dataContext.getSetting(Setting.KEYS.birthday.toString());
+            if (settingBirthday != null) {
+                DateTime birthday = new DateTime(Long.parseLong(settingBirthday.getValue()));
+                btnBirthday.setText(birthday.toShortDateString());
+            } else {
+                btnBirthday.setText("设定生日");
+            }
+
+            Setting settingCustom = dataContext.getSetting(Setting.KEYS.target.toString());
+            if (settingCustom != null) {
+                long target = Integer.parseInt(settingCustom.getValue()) * 60000 * 60;
+                btnCustomTarget.setText(DateTime.toSpanString(target, 4, 3));
+            } else {
+                btnCustomTarget.setText("设定行房间隔");
+            }
+
+            btnBirthday.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    dataContext.editSetting(Setting.KEYS.isShowRecords.toString(), isChecked + "");
+                public void onClick(View v) {
+// TODO: 2017/4/1 弹出设置生日对话框
                 }
             });
+            btnCustomTarget.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+// TODO: 2017/4/1 弹出设置自定义行房间隔对话框
+                }
+            });
+
 
             Setting szr = dataContext.getSetting(Setting.KEYS.szr.toString(), false + "");
             checkBox_szr.setChecked(Boolean.parseBoolean(szr.getValue()));
@@ -160,7 +206,7 @@ public class SettingActivity extends AppCompatActivity implements OnActionFragme
                 this.addListItem(md);
             }
             refreshMdList();
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             _Helper.printExceptionSycn(this, uiHandler, e);
         }
 //        mdListAdapter = new MDlistdAdapter();

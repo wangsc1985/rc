@@ -13,33 +13,33 @@
         android:typeface="monospace" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/checkBox_lzr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="六斋日"
-            android:id="@+id/checkBox_lzr"
             android:textSize="14dp"
             android:typeface="monospace" />
 
         <CheckBox
+            android:id="@+id/checkBox_szr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="十斋日"
-            android:id="@+id/checkBox_szr"
             android:textSize="14dp"
             android:typeface="monospace" />
 
         <CheckBox
+            android:id="@+id/checkBox_gyz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="观音斋"
-            android:id="@+id/checkBox_gyz"
             android:textSize="14dp"
             android:typeface="monospace" />
 
